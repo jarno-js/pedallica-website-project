@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfielController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 
 Route::get('/', [HomepageController::class, 'index'])->name('home');
 Route::get('/fotos-sponsors', [SponsorsController::class, 'index'])->name('fotos-sponsors');
@@ -32,4 +33,30 @@ Route::middleware('auth')->group(function () {
     Route::put('/profiel/wachtwoord', [ProfielController::class, 'updatePassword'])->name('profiel.password');
     Route::put('/profiel/foto', [ProfielController::class, 'updateProfilePicture'])->name('profiel.picture');
     Route::delete('/profiel/foto', [ProfielController::class, 'deleteProfilePicture'])->name('profiel.picture.delete');
+});
+
+// Admin Routes (alleen toegankelijk voor admins)
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+    // User management
+    Route::put('/users/{id}/approve', [AdminDashboardController::class, 'approveUser'])->name('admin.users.approve');
+    Route::put('/users/{id}/make-admin', [AdminDashboardController::class, 'makeAdmin'])->name('admin.users.make-admin');
+    Route::put('/users/{id}/remove-admin', [AdminDashboardController::class, 'removeAdmin'])->name('admin.users.remove-admin');
+    Route::delete('/users/{id}', [AdminDashboardController::class, 'deleteUser'])->name('admin.users.delete');
+
+    // News management
+    Route::post('/news', [AdminDashboardController::class, 'storeNews'])->name('admin.news.store');
+    Route::put('/news/{id}', [AdminDashboardController::class, 'updateNews'])->name('admin.news.update');
+    Route::delete('/news/{id}', [AdminDashboardController::class, 'deleteNews'])->name('admin.news.delete');
+
+    // Sponsor management
+    Route::post('/sponsors', [AdminDashboardController::class, 'storeSponsor'])->name('admin.sponsors.store');
+    Route::put('/sponsors/{id}', [AdminDashboardController::class, 'updateSponsor'])->name('admin.sponsors.update');
+    Route::delete('/sponsors/{id}', [AdminDashboardController::class, 'deleteSponsor'])->name('admin.sponsors.delete');
+
+    // Event management
+    Route::post('/events', [AdminDashboardController::class, 'storeEvent'])->name('admin.events.store');
+    Route::put('/events/{id}', [AdminDashboardController::class, 'updateEvent'])->name('admin.events.update');
+    Route::delete('/events/{id}', [AdminDashboardController::class, 'deleteEvent'])->name('admin.events.delete');
 });

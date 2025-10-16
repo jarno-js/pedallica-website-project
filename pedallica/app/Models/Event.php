@@ -9,6 +9,9 @@ class Event extends Model
 {
     protected $fillable = [
         'title',
+        'description',
+        'location',
+        'date',
         'poster',
         'start_date',
         'end_date',
@@ -17,6 +20,7 @@ class Event extends Model
     ];
 
     protected $casts = [
+        'date' => 'date',
         'start_date' => 'date',
         'end_date' => 'date',
         'is_passed' => 'boolean',

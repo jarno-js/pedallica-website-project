@@ -32,6 +32,11 @@
                     <a href="{{ route('dashboard') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">
                         Dashboard
                     </a>
+                    @if(Auth::user()->is_admin)
+                        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">
+                            Admin Dashboard
+                        </a>
+                    @endif
                 @endauth
 
                 <!-- Account Dropdown -->
@@ -107,6 +112,9 @@
                 <a href="{{ route('evenementen') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">Evenementen</a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">Dashboard</a>
+                    @if(Auth::user()->is_admin)
+                        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">Admin Dashboard</a>
+                    @endif
                 @endauth
             </div>
         </div>

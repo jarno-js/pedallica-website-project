@@ -31,6 +31,7 @@ class User extends Authenticatable
         'country',
         'profile_picture',
         'approved',
+        'is_admin',
     ];
 
     /**
@@ -55,6 +56,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'birth_date' => 'date',
             'approved' => 'boolean',
+            'is_admin' => 'boolean',
         ];
     }
 }
