@@ -14,13 +14,8 @@
                         <!-- Poster Preview -->
                         <div class="flex-shrink-0">
                             @if($event->poster)
-                                @if(str_contains($event->poster, '/'))
-                                    <img src="{{ asset('storage/' . $event->poster) }}" alt="{{ $event->title }}"
-                                         class="w-32 h-32 object-cover rounded" onerror="this.parentElement.innerHTML='<div class=\'w-32 h-32 bg-gray-200 flex items-center justify-center rounded\'><span class=\'text-gray-400 text-xs text-center\'>Geen poster</span></div>'">
-                                @else
-                                    <img src="{{ asset($event->poster) }}" alt="{{ $event->title }}"
-                                         class="w-32 h-32 object-cover rounded" onerror="this.parentElement.innerHTML='<div class=\'w-32 h-32 bg-gray-200 flex items-center justify-center rounded\'><span class=\'text-gray-400 text-xs text-center\'>Geen poster</span></div>'">
-                                @endif
+                                <img src="{{ asset($event->poster) }}" alt="{{ $event->title }}"
+                                     class="w-32 h-32 object-cover rounded" onerror="this.parentElement.innerHTML='<div class=\'w-32 h-32 bg-gray-200 flex items-center justify-center rounded\'><span class=\'text-gray-400 text-xs text-center\'>Geen poster</span></div>'">
                             @else
                                 <div class="w-32 h-32 bg-gray-200 flex items-center justify-center rounded">
                                     <span class="text-gray-400 text-xs text-center">Geen poster</span>

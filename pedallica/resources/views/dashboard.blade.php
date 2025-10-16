@@ -199,7 +199,7 @@
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
                                                     @if($lid->profile_picture)
-                                                        <img src="{{ asset('storage/' . $lid->profile_picture) }}" alt="{{ $lid->first_name }}"
+                                                        <img src="{{ asset($lid->profile_picture) }}" alt="{{ $lid->first_name }}"
                                                              class="w-10 h-10 rounded-full object-cover mr-3">
                                                     @else
                                                         <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
@@ -303,7 +303,7 @@ function showUserDetails(userId) {
     const content = `
         <div class="flex items-center gap-4 mb-6 pb-6 border-b">
             ${user.profile_picture ?
-                `<img src="/storage/${user.profile_picture}" alt="${user.first_name}" class="w-24 h-24 rounded-full object-cover">` :
+                `<img src="/${user.profile_picture}" alt="${user.first_name}" class="w-24 h-24 rounded-full object-cover">` :
                 `<div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
                     <span class="text-3xl text-gray-600 font-semibold">${user.first_name[0]}${user.last_name[0]}</span>
                 </div>`

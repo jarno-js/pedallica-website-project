@@ -12,15 +12,8 @@
                 <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex flex-col items-center">
                         @if($sponsor->logo)
-                            @if(str_contains($sponsor->logo, '/'))
-                                {{-- Nieuwe format: met path --}}
-                                <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}"
-                                     class="w-32 h-32 object-contain mb-4" onerror="this.src='{{ asset('placeholder.png') }}'">
-                            @else
-                                {{-- Oude format: alleen bestandsnaam --}}
-                                <img src="{{ asset($sponsor->logo) }}" alt="{{ $sponsor->name }}"
-                                     class="w-32 h-32 object-contain mb-4" onerror="this.src='{{ asset('placeholder.png') }}'">
-                            @endif
+                            <img src="{{ asset($sponsor->logo) }}" alt="{{ $sponsor->name }}"
+                                 class="w-32 h-32 object-contain mb-4" onerror="this.src='{{ asset('placeholder.png') }}'">
                         @else
                             <div class="w-32 h-32 bg-gray-200 flex items-center justify-center mb-4 rounded">
                                 <span class="text-gray-400 text-xs text-center">Geen logo</span>

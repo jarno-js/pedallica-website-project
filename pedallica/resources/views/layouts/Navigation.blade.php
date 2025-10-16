@@ -44,7 +44,7 @@
                     <button id="account-button" class="flex items-center space-x-1 px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">
                         @auth
                             @if(Auth::user()->profile_picture)
-                                <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profielfoto"
+                                <img src="{{ asset(Auth::user()->profile_picture) }}" alt="Profielfoto"
                                      class="w-8 h-8 rounded-full object-cover border-2 border-white">
                             @else
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

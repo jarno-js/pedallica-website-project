@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\News;
 use App\Models\Sponsor;
 use App\Models\Event;
+use App\Models\Rit;
+use App\Models\Ploeg;
 use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
@@ -30,7 +32,13 @@ class AdminDashboardController extends Controller
         // Haal alle events op
         $events = Event::orderBy('date', 'desc')->get();
 
-        return view('admin.dashboard', compact('tab', 'pendingUsers', 'approvedUsers', 'nieuws', 'sponsors', 'events'));
+        // Haal alle ritten op met ploeg informatie
+        $ritten = Rit::with('ploeg')->orderBy('date', 'desc')->get();
+
+        // Haal alle ploegen op voor dropdown
+        $ploegen = Ploeg::orderByRaw("FIELD(slug, 'ploeg-a', 'ploeg-b', 'ploeg-c', 'mtb', 'avondritten', 'pedallicava')")->get();
+
+        return view('admin.dashboard', compact('tab', 'pendingUsers', 'approvedUsers', 'nieuws', 'sponsors', 'events', 'ritten', 'ploegen'));
     }
 
     // Leden management
@@ -129,13 +137,19 @@ class AdminDashboardController extends Controller
             'website' => 'nullable|url',
         ]);
 
-        $logoPath = $request->file('logo')->store('sponsors', 'public');
-
-        Sponsor::create([
+        // Create sponsor first to get ID
+        $sponsor = Sponsor::create([
             'name' => $request->name,
-            'logo' => $logoPath,
             'website' => $request->website,
         ]);
+
+        // Upload logo with sponsor name and ID
+        if ($request->hasFile('logo')) {
+            $extension = $request->file('logo')->getClientOriginalExtension();
+            $filename = \Str::slug($sponsor->name) . '-' . $sponsor->id . '.' . $extension;
+            $request->file('logo')->move(public_path('uploads/sponsors/logos'), $filename);
+            $sponsor->update(['logo' => 'uploads/sponsors/logos/' . $filename]);
+        }
 
         return redirect()->route('admin.dashboard', ['tab' => 'sponsors'])
             ->with('success', 'Sponsor is toegevoegd!');
@@ -158,10 +172,15 @@ class AdminDashboardController extends Controller
 
         if ($request->hasFile('logo')) {
             // Delete old logo
-            if ($sponsor->logo && \Storage::disk('public')->exists($sponsor->logo)) {
-                \Storage::disk('public')->delete($sponsor->logo);
+            if ($sponsor->logo && file_exists(public_path($sponsor->logo))) {
+                unlink(public_path($sponsor->logo));
             }
-            $data['logo'] = $request->file('logo')->store('sponsors', 'public');
+
+            // Upload new logo with sponsor name and ID
+            $extension = $request->file('logo')->getClientOriginalExtension();
+            $filename = \Str::slug($request->name) . '-' . $sponsor->id . '.' . $extension;
+            $request->file('logo')->move(public_path('uploads/sponsors/logos'), $filename);
+            $data['logo'] = 'uploads/sponsors/logos/' . $filename;
         }
 
         $sponsor->update($data);
@@ -175,8 +194,8 @@ class AdminDashboardController extends Controller
         $sponsor = Sponsor::findOrFail($id);
 
         // Delete logo
-        if ($sponsor->logo && \Storage::disk('public')->exists($sponsor->logo)) {
-            \Storage::disk('public')->delete($sponsor->logo);
+        if ($sponsor->logo && file_exists(public_path($sponsor->logo))) {
+            unlink(public_path($sponsor->logo));
         }
 
         $sponsor->delete();
@@ -196,13 +215,21 @@ class AdminDashboardController extends Controller
             'location' => 'nullable|string|max:255',
         ]);
 
-        $data = $request->all();
+        // Create event first to get ID
+        $event = Event::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'date' => $request->date,
+            'location' => $request->location,
+        ]);
 
+        // Upload poster with event name and ID
         if ($request->hasFile('poster')) {
-            $data['poster'] = $request->file('poster')->store('events', 'public');
+            $extension = $request->file('poster')->getClientOriginalExtension();
+            $filename = \Str::slug($event->title) . '-' . $event->id . '.' . $extension;
+            $request->file('poster')->move(public_path('uploads/evenementen/posters'), $filename);
+            $event->update(['poster' => 'uploads/evenementen/posters/' . $filename]);
         }
-
-        Event::create($data);
 
         return redirect()->route('admin.dashboard', ['tab' => 'evenementen'])
             ->with('success', 'Evenement is toegevoegd!');
@@ -219,14 +246,25 @@ class AdminDashboardController extends Controller
         ]);
 
         $event = Event::findOrFail($id);
-        $data = $request->all();
+
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description,
+            'date' => $request->date,
+            'location' => $request->location,
+        ];
 
         if ($request->hasFile('poster')) {
             // Delete old poster
-            if ($event->poster && \Storage::disk('public')->exists($event->poster)) {
-                \Storage::disk('public')->delete($event->poster);
+            if ($event->poster && file_exists(public_path($event->poster))) {
+                unlink(public_path($event->poster));
             }
-            $data['poster'] = $request->file('poster')->store('events', 'public');
+
+            // Upload new poster with event name and ID
+            $extension = $request->file('poster')->getClientOriginalExtension();
+            $filename = \Str::slug($request->title) . '-' . $event->id . '.' . $extension;
+            $request->file('poster')->move(public_path('uploads/evenementen/posters'), $filename);
+            $data['poster'] = 'uploads/evenementen/posters/' . $filename;
         }
 
         $event->update($data);
@@ -240,13 +278,117 @@ class AdminDashboardController extends Controller
         $event = Event::findOrFail($id);
 
         // Delete poster
-        if ($event->poster && \Storage::disk('public')->exists($event->poster)) {
-            \Storage::disk('public')->delete($event->poster);
+        if ($event->poster && file_exists(public_path($event->poster))) {
+            unlink(public_path($event->poster));
         }
 
         $event->delete();
 
         return redirect()->route('admin.dashboard', ['tab' => 'evenementen'])
             ->with('success', 'Evenement is verwijderd!');
+    }
+
+    // Rit management
+    public function storeRit(Request $request)
+    {
+        $request->validate([
+            'ploeg_id' => 'required|exists:ploegs,id',
+            'title' => 'required|string|max:255',
+            'route_name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'date' => 'required|date',
+            'start_time' => 'nullable',
+            'location' => 'nullable|string|max:255',
+            'start_address' => 'nullable|string|max:255',
+            'distance' => 'nullable|integer',
+            'download_link' => 'nullable|url',
+            'gpx_file' => 'nullable|file|mimes:gpx|max:5120',
+            'photo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
+        ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('gpx_file')) {
+            $filename = time() . '-' . $request->file('gpx_file')->getClientOriginalName();
+            $request->file('gpx_file')->move(public_path('uploads/ritten/gpx'), $filename);
+            $data['gpx_file'] = 'uploads/ritten/gpx/' . $filename;
+        }
+
+        if ($request->hasFile('photo')) {
+            $filename = time() . '-' . $request->file('photo')->getClientOriginalName();
+            $request->file('photo')->move(public_path('uploads/ritten/photos'), $filename);
+            $data['photo'] = 'uploads/ritten/photos/' . $filename;
+        }
+
+        Rit::create($data);
+
+        return redirect()->route('admin.dashboard', ['tab' => 'ritten'])
+            ->with('success', 'Rit is toegevoegd!');
+    }
+
+    public function updateRit(Request $request, $id)
+    {
+        $request->validate([
+            'ploeg_id' => 'required|exists:ploegs,id',
+            'title' => 'required|string|max:255',
+            'route_name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'date' => 'required|date',
+            'start_time' => 'nullable',
+            'location' => 'nullable|string|max:255',
+            'start_address' => 'nullable|string|max:255',
+            'distance' => 'nullable|integer',
+            'download_link' => 'nullable|url',
+            'gpx_file' => 'nullable|file|mimes:gpx|max:5120',
+            'photo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
+        ]);
+
+        $rit = Rit::findOrFail($id);
+        $data = $request->all();
+
+        if ($request->hasFile('gpx_file')) {
+            // Delete old GPX file
+            if ($rit->gpx_file && file_exists(public_path($rit->gpx_file))) {
+                unlink(public_path($rit->gpx_file));
+            }
+            $filename = time() . '-' . $request->file('gpx_file')->getClientOriginalName();
+            $request->file('gpx_file')->move(public_path('uploads/ritten/gpx'), $filename);
+            $data['gpx_file'] = 'uploads/ritten/gpx/' . $filename;
+        }
+
+        if ($request->hasFile('photo')) {
+            // Delete old photo
+            if ($rit->photo && file_exists(public_path($rit->photo))) {
+                unlink(public_path($rit->photo));
+            }
+            $filename = time() . '-' . $request->file('photo')->getClientOriginalName();
+            $request->file('photo')->move(public_path('uploads/ritten/photos'), $filename);
+            $data['photo'] = 'uploads/ritten/photos/' . $filename;
+        }
+
+        $rit->update($data);
+
+        return redirect()->route('admin.dashboard', ['tab' => 'ritten'])
+            ->with('success', 'Rit is bijgewerkt!');
+    }
+
+    public function deleteRit($id)
+    {
+        $rit = Rit::findOrFail($id);
+
+        // Delete GPX file
+        if ($rit->gpx_file && file_exists(public_path($rit->gpx_file))) {
+            unlink(public_path($rit->gpx_file));
+        }
+
+        // Delete photo
+        if ($rit->photo && file_exists(public_path($rit->photo))) {
+            unlink(public_path($rit->photo));
+        }
+
+        $rit->delete();
+
+        return redirect()->route('admin.dashboard', ['tab' => 'ritten'])
+            ->with('success', 'Rit is verwijderd!');
     }
 }

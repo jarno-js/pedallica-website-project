@@ -59,4 +59,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/events', [AdminDashboardController::class, 'storeEvent'])->name('admin.events.store');
     Route::put('/events/{id}', [AdminDashboardController::class, 'updateEvent'])->name('admin.events.update');
     Route::delete('/events/{id}', [AdminDashboardController::class, 'deleteEvent'])->name('admin.events.delete');
+
+    // Rit management
+    Route::post('/ritten', [AdminDashboardController::class, 'storeRit'])->name('admin.ritten.store');
+    Route::put('/ritten/{id}', [AdminDashboardController::class, 'updateRit'])->name('admin.ritten.update');
+    Route::delete('/ritten/{id}', [AdminDashboardController::class, 'deleteRit'])->name('admin.ritten.delete');
 });

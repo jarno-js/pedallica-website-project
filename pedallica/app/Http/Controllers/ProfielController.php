@@ -82,15 +82,17 @@ class ProfielController extends Controller
         ]);
 
         // Verwijder oude profielfoto indien aanwezig
-        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
-            Storage::disk('public')->delete($user->profile_picture);
+        if ($user->profile_picture && file_exists(public_path($user->profile_picture))) {
+            unlink(public_path($user->profile_picture));
         }
 
-        // Upload nieuwe foto
-        $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+        // Upload nieuwe foto met user ID
+        $extension = $request->file('profile_picture')->getClientOriginalExtension();
+        $filename = 'user-' . $user->id . '.' . $extension;
+        $request->file('profile_picture')->move(public_path('uploads/profile_pictures'), $filename);
 
         $user->update([
-            'profile_picture' => $path,
+            'profile_picture' => 'uploads/profile_pictures/' . $filename,
         ]);
 
         return redirect()->route('profiel')->with('success', 'Je profielfoto is succesvol bijgewerkt!');
@@ -103,8 +105,8 @@ class ProfielController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
-            Storage::disk('public')->delete($user->profile_picture);
+        if ($user->profile_picture && file_exists(public_path($user->profile_picture))) {
+            unlink(public_path($user->profile_picture));
         }
 
         $user->update([

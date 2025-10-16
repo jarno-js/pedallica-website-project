@@ -28,7 +28,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         @if($user->profile_picture)
-                                            <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="{{ $user->first_name }}"
+                                            <img src="{{ asset($user->profile_picture) }}" alt="{{ $user->first_name }}"
                                                  class="w-10 h-10 rounded-full object-cover mr-3">
                                         @else
                                             <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
@@ -93,7 +93,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     @if($user->profile_picture)
-                                        <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="{{ $user->first_name }}"
+                                        <img src="{{ asset($user->profile_picture) }}" alt="{{ $user->first_name }}"
                                              class="w-10 h-10 rounded-full object-cover mr-3">
                                     @else
                                         <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
