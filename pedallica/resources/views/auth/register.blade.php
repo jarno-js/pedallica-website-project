@@ -1,4 +1,4 @@
-@extends('layouts.Navigation')
+@extends('layouts.app')
 
 @section('title', 'Registreren - Pedallica')
 

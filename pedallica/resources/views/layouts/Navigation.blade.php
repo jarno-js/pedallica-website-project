@@ -28,13 +28,31 @@
                     Evenementen
                 </a>
 
+                @auth
+                    <a href="{{ route('dashboard') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">
+                        Dashboard
+                    </a>
+                @endauth
+
                 <!-- Account Dropdown -->
                 <div class="relative">
                     <button id="account-button" class="flex items-center space-x-1 px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
+                        @auth
+                            @if(Auth::user()->profile_picture)
+                                <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profielfoto"
+                                     class="w-8 h-8 rounded-full object-cover border-2 border-white">
+                            @else
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            @endif
+                        @else
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        @endauth
                         <span>Account</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -51,14 +69,11 @@
                                 Registreren
                             </a>
                         @else
-                            <a href="/profiel" class="block px-4 py-2 text-gray-700 hover:bg-orange-500 hover:text-white transition-colors">
-                                Mijn Profiel
-                            </a>
-                            <a href="/instellingen" class="block px-4 py-2 text-gray-700 hover:bg-orange-500 hover:text-white transition-colors">
-                                Instellingen
+                            <a href="{{ route('profiel') }}" class="block px-4 py-2 text-gray-700 hover:bg-orange-500 hover:text-white transition-colors">
+                                Profiel
                             </a>
                             <div class="border-t border-gray-200"></div>
-                            <form method="POST" action="/logout">
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-orange-500 hover:text-white transition-colors">
                                     Uitloggen
@@ -90,6 +105,9 @@
                 <a href="{{ route('fotos-sponsors') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">Sponsors</a>
                 <a href="{{ route('fotos-ploegen') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">Ploegen</a>
                 <a href="{{ route('evenementen') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">Evenementen</a>
+                @auth
+                    <a href="{{ route('dashboard') }}" class="px-4 py-2 text-white hover:bg-orange-500 hover:text-black rounded-md transition-colors font-medium">Dashboard</a>
+                @endauth
             </div>
         </div>
     </div>

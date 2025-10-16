@@ -26,10 +26,24 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
+        // Probeer in te loggen
         if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $user = Auth::user();
+
+            // Check of de gebruiker is goedgekeurd door een admin
+            if (!$user->approved) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()->withErrors([
+                    'email' => 'Je account is nog niet goedgekeurd door een admin. Je ontvangt een bericht zodra je account is goedgekeurd.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
 
-            return redirect()->intended(route('home'))->with('success', 'Welkom terug!');
+            return redirect()->route('dashboard')->with('success', 'Welkom terug, ' . $user->first_name . '!');
         }
 
         return back()->withErrors([

@@ -68,7 +68,12 @@ class RegisterController extends Controller
             $user->update(['profile_picture' => $filename]);
         }
 
-        // Redirect naar homepage met succesbericht (NIET inloggen, wacht op goedkeuring)
-        return redirect()->route('home')->with('success', 'Account succesvol aangemaakt! Je account moet nog goedgekeurd worden door een admin voordat je kan inloggen. Je ontvangt hierover bericht.');
+        // Zorg ervoor dat gebruiker NIET automatisch wordt ingelogd
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // Redirect naar login pagina met succesbericht (NIET naar home, om verwarring te voorkomen)
+        return redirect()->route('login')->with('success', 'Account succesvol aangemaakt! Je account moet nog goedgekeurd worden door een admin voordat je kan inloggen. Je ontvangt hierover bericht.');
     }
 }
