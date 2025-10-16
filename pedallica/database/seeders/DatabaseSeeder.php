@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SponsorSeeder::class,
             EventSeeder::class,
+            PloegSeeder::class,
         ]);
     }
 }
