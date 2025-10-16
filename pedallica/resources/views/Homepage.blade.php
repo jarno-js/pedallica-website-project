@@ -92,6 +92,19 @@
     </style>
 </head>
 <body>
+{{-- Success/Error meldingen --}}
+@if(session('success'))
+<div style="background:#10b981;color:white;padding:16px;text-align:center;font-weight:600;border-bottom:1px solid rgba(255,255,255,.1)">
+    {{ session('success') }}
+</div>
+@endif
+
+@if(session('error'))
+<div style="background:#ef4444;color:white;padding:16px;text-align:center;font-weight:600;border-bottom:1px solid rgba(255,255,255,.1)">
+    {{ session('error') }}
+</div>
+@endif
+
 {{-- HERO SECTIE met logo en slogan --}}
 <header class="hero">
     <div class="container">
