@@ -35,8 +35,8 @@ class AdminDashboardController extends Controller
         // Haal alle ritten op met ploeg informatie
         $ritten = Rit::with('ploeg')->orderBy('date', 'desc')->get();
 
-        // Haal alle ploegen op voor dropdown
-        $ploegen = Ploeg::orderByRaw("FIELD(slug, 'ploeg-a', 'ploeg-b', 'ploeg-c', 'mtb', 'avondritten', 'pedallicava')")->get();
+        // Haal alle ploegen op voor dropdown (in logische volgorde)
+        $ploegen = Ploeg::orderByRaw("FIELD(slug, 'pedallica-a', 'pedallica-b', 'pedallica-c', 'mtb', 'pedallicava')")->get();
 
         return view('admin.dashboard', compact('tab', 'pendingUsers', 'approvedUsers', 'nieuws', 'sponsors', 'events', 'ritten', 'ploegen'));
     }

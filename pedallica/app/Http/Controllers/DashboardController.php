@@ -15,17 +15,17 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         // Haal alle ploegen op in specifieke volgorde
-        $allePloegen = Ploeg::orderByRaw("FIELD(slug, 'ploeg-a', 'ploeg-b', 'ploeg-c', 'mtb', 'avondritten', 'pedallicava')")
+        $allePloegen = Ploeg::orderByRaw("FIELD(slug, 'pedallica-a', 'pedallica-b', 'pedallica-c', 'mtb', 'pedallicava')")
                             ->get();
 
         // Splits in groepen voor weergave
-        $ploegenVoorAvond = $allePloegen->whereIn('slug', ['ploeg-a', 'ploeg-b', 'ploeg-c', 'mtb']);
-        $avondritten = $allePloegen->where('slug', 'avondritten')->first();
+        $ploegenVoorAvond = $allePloegen->whereIn('slug', ['pedallica-a', 'pedallica-b', 'pedallica-c', 'mtb']);
+        $avondritten = null; // Avondritten bestaat niet meer als aparte ploeg
         $ploegenNaAvond = $allePloegen->where('slug', 'pedallicava');
 
         // Default tab is 'ritten'
         $tab = $request->get('tab', 'ritten');
-        $subTab = $request->get('subtab', 'ploeg-a');
+        $subTab = $request->get('subtab', 'pedallica-a');
 
         // Haal alle leden op (goedgekeurde gebruikers)
         $leden = User::where('approved', true)->orderBy('first_name')->get();
