@@ -14,20 +14,20 @@ class PloegSeeder extends Seeder
     {
         $ploegen = [
             [
-                'name' => 'Ploeg A',
-                'slug' => 'ploeg-a',
+                'name' => 'Pedallica A',
+                'slug' => 'pedallica-a',
                 'description' => 'Snelle ploeg voor ervaren wielrenners',
                 'is_evening_rides' => false,
             ],
             [
-                'name' => 'Ploeg B',
-                'slug' => 'ploeg-b',
+                'name' => 'Pedallica B',
+                'slug' => 'pedallica-b',
                 'description' => 'Gemiddeld tempo voor recreatieve renners',
                 'is_evening_rides' => false,
             ],
             [
-                'name' => 'Ploeg C',
-                'slug' => 'ploeg-c',
+                'name' => 'Pedallica C',
+                'slug' => 'pedallica-c',
                 'description' => 'Rustig tempo voor beginners',
                 'is_evening_rides' => false,
             ],
@@ -38,12 +38,6 @@ class PloegSeeder extends Seeder
                 'is_evening_rides' => false,
             ],
             [
-                'name' => 'Avondritten',
-                'slug' => 'avondritten',
-                'description' => 'Speciale avondritten voor alle niveaus',
-                'is_evening_rides' => true,
-            ],
-            [
                 'name' => 'Pedallicava',
                 'slug' => 'pedallicava',
                 'description' => 'Pedallicava evenementen en ritten',
@@ -52,7 +46,10 @@ class PloegSeeder extends Seeder
         ];
 
         foreach ($ploegen as $ploeg) {
-            Ploeg::create($ploeg);
+            Ploeg::updateOrCreate(
+                ['slug' => $ploeg['slug']],
+                $ploeg
+            );
         }
     }
 }

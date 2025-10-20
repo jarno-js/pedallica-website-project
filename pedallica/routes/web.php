@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 Route::get('/', [HomepageController::class, 'index'])->name('home');
 Route::get('/fotos-sponsors', [SponsorsController::class, 'index'])->name('fotos-sponsors');
 Route::get('/fotos-ploegen', [PloegenController::class, 'index'])->name('fotos-ploegen');
+Route::get('/fotos-ploegen/{slug}', [PloegenController::class, 'show'])->name('fotos-ploegen.show');
 Route::get('/evenementen', [EvenementenController::class, 'index'])->name('evenementen');
 
 // Authentication Routes
