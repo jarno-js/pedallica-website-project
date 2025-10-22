@@ -235,14 +235,9 @@
                     </div>
 
                 @elseif($tab === 'nieuws')
-                    <!-- Nieuws Tab -->
+                    <!-- Nieuws Tab (zonder toevoegen knop) -->
                     <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-2xl font-semibold text-gray-900">Nieuws</h2>
-                            <button class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors">
-                                + Nieuwsbericht Toevoegen
-                            </button>
-                        </div>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Nieuws</h2>
 
                         @if($nieuws->count() > 0)
                             <div class="space-y-4">
