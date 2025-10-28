@@ -211,15 +211,23 @@ class AdminDashboardController extends Controller
             'title' => 'required|string|max:255',
             'poster' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
             'description' => 'nullable|string',
-            'date' => 'required|date',
+            'date' => 'required|string',
             'location' => 'nullable|string|max:255',
         ]);
+
+        // Converteer datum van dd/mm/yyyy naar Y-m-d
+        $date = $request->date;
+        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $date, $matches)) {
+            $date = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+        }
 
         // Create event first to get ID
         $event = Event::create([
             'title' => $request->title,
             'description' => $request->description,
-            'date' => $request->date,
+            'date' => $date,
+            'start_date' => $date,
+            'end_date' => $date,
             'location' => $request->location,
         ]);
 
@@ -231,6 +239,9 @@ class AdminDashboardController extends Controller
             $event->update(['poster' => 'uploads/evenementen/posters/' . $filename]);
         }
 
+        // Check if event has passed
+        $event->checkIfPassed();
+
         return redirect()->route('admin.dashboard', ['tab' => 'evenementen'])
             ->with('success', 'Evenement is toegevoegd!');
     }
@@ -241,16 +252,24 @@ class AdminDashboardController extends Controller
             'title' => 'required|string|max:255',
             'poster' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
             'description' => 'nullable|string',
-            'date' => 'required|date',
+            'date' => 'required|string',
             'location' => 'nullable|string|max:255',
         ]);
 
         $event = Event::findOrFail($id);
 
+        // Converteer datum van dd/mm/yyyy naar Y-m-d
+        $date = $request->date;
+        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $date, $matches)) {
+            $date = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+        }
+
         $data = [
             'title' => $request->title,
             'description' => $request->description,
-            'date' => $request->date,
+            'date' => $date,
+            'start_date' => $date,
+            'end_date' => $date,
             'location' => $request->location,
         ];
 
@@ -268,6 +287,9 @@ class AdminDashboardController extends Controller
         }
 
         $event->update($data);
+
+        // Check if event has passed
+        $event->checkIfPassed();
 
         return redirect()->route('admin.dashboard', ['tab' => 'evenementen'])
             ->with('success', 'Evenement is bijgewerkt!');
@@ -296,7 +318,7 @@ class AdminDashboardController extends Controller
             'title' => 'required|string|max:255',
             'route_name' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'date' => 'required|date',
+            'date' => 'required|string',
             'start_time' => 'nullable',
             'location' => 'nullable|string|max:255',
             'start_address' => 'nullable|string|max:255',
@@ -307,6 +329,11 @@ class AdminDashboardController extends Controller
         ]);
 
         $data = $request->all();
+
+        // Converteer datum van dd/mm/yyyy naar Y-m-d
+        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $data['date'], $matches)) {
+            $data['date'] = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+        }
 
         if ($request->hasFile('gpx_file')) {
             $filename = time() . '-' . $request->file('gpx_file')->getClientOriginalName();
@@ -333,7 +360,7 @@ class AdminDashboardController extends Controller
             'title' => 'required|string|max:255',
             'route_name' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'date' => 'required|date',
+            'date' => 'required|string',
             'start_time' => 'nullable',
             'location' => 'nullable|string|max:255',
             'start_address' => 'nullable|string|max:255',
@@ -345,6 +372,11 @@ class AdminDashboardController extends Controller
 
         $rit = Rit::findOrFail($id);
         $data = $request->all();
+
+        // Converteer datum van dd/mm/yyyy naar Y-m-d
+        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $data['date'], $matches)) {
+            $data['date'] = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+        }
 
         if ($request->hasFile('gpx_file')) {
             // Delete old GPX file

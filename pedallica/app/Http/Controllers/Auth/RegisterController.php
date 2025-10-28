@@ -30,7 +30,7 @@ class RegisterController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'birth_date' => ['required', 'date', 'before:today'],
+            'birth_date' => ['required', 'string'],
             'phone' => ['required', 'string', 'max:20'],
             'street' => ['required', 'string', 'max:255'],
             'house_number' => ['required', 'string', 'max:20'],
@@ -39,6 +39,11 @@ class RegisterController extends Controller
             'country' => ['required', 'string', 'max:255'],
             'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
+
+        // Converteer datum van dd/mm/yyyy naar Y-m-d
+        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $validated['birth_date'], $matches)) {
+            $validated['birth_date'] = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+        }
 
         // Maak nieuwe gebruiker aan (zonder profielfoto eerst, approved = false)
         $user = User::create([

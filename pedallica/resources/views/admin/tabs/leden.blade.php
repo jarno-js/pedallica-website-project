@@ -1,6 +1,17 @@
 <div>
     <h2 class="text-2xl font-semibold text-gray-900 mb-6">Gebruikersbeheer</h2>
 
+    <!-- Zoekbalk voor personen -->
+    <div class="mb-6">
+        <div class="relative">
+            <input type="text" id="adminLedenZoekbalk" placeholder="Zoek gebruikers op naam, email, telefoon..."
+                   class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+            <svg class="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+        </div>
+    </div>
+
     <!-- Pending Users Section -->
     @if($pendingUsers->count() > 0)
         <div class="mb-8">
@@ -155,3 +166,23 @@
         </div>
     </div>
 </div>
+
+<script>
+// Zoekfunctie voor leden in admin
+const adminLedenZoekbalk = document.getElementById('adminLedenZoekbalk');
+if (adminLedenZoekbalk) {
+    adminLedenZoekbalk.addEventListener('input', function(e) {
+        const zoekterm = e.target.value.toLowerCase();
+        const allRows = document.querySelectorAll('tbody tr');
+
+        allRows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(zoekterm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+}
+</script>

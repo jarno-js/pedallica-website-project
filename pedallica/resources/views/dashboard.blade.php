@@ -96,8 +96,19 @@
                             </button>
                         </div>
 
+                        <!-- Zoekbalk voor ritten -->
+                        <div class="mb-6">
+                            <div class="relative">
+                                <input type="text" id="rittenZoekbalk" placeholder="Zoek ritten op naam, locatie, datum..."
+                                       class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                <svg class="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+
                         @if($currentPloeg->ritten->count() > 0)
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div id="rittenContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 @foreach($currentPloeg->ritten as $rit)
                                     <div class="bg-white rounded-lg shadow-md border {{ $currentPloeg->is_evening_rides ? 'border-orange-300' : 'border-gray-200' }} overflow-hidden hover:shadow-lg transition-shadow">
                                         <div class="p-5">
@@ -182,6 +193,17 @@
                     <!-- Leden Tab -->
                     <div>
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">Leden Overzicht</h2>
+
+                        <!-- Zoekbalk voor personen -->
+                        <div class="mb-6">
+                            <div class="relative">
+                                <input type="text" id="ledenZoekbalk" placeholder="Zoek leden op naam, email, telefoon..."
+                                       class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                <svg class="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                            </div>
+                        </div>
 
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
@@ -350,5 +372,41 @@ document.getElementById('userModal').addEventListener('click', function(e) {
         closeUserModal();
     }
 });
+
+// Zoekfunctie voor ritten
+const rittenZoekbalk = document.getElementById('rittenZoekbalk');
+if (rittenZoekbalk) {
+    rittenZoekbalk.addEventListener('input', function(e) {
+        const zoekterm = e.target.value.toLowerCase();
+        const rittenCards = document.querySelectorAll('#rittenContainer > div');
+
+        rittenCards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            if (text.includes(zoekterm)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+}
+
+// Zoekfunctie voor leden
+const ledenZoekbalk = document.getElementById('ledenZoekbalk');
+if (ledenZoekbalk) {
+    ledenZoekbalk.addEventListener('input', function(e) {
+        const zoekterm = e.target.value.toLowerCase();
+        const ledenRows = document.querySelectorAll('tbody tr');
+
+        ledenRows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(zoekterm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+}
 </script>
 @endsection

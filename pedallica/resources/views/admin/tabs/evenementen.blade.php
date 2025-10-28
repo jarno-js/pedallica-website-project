@@ -113,7 +113,7 @@
                 </div>
                 <div>
                     <label for="event_date" class="block text-sm font-medium text-gray-700 mb-1">Datum</label>
-                    <input type="date" name="date" id="event_date" required
+                    <input type="text" name="date" id="event_date" required placeholder="dd/mm/jjjj"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
                 </div>
                 <div>
@@ -159,7 +159,19 @@ function editEvent(id, title, description, date, location) {
     document.getElementById('event_poster').required = false;
     document.getElementById('posterHelp').textContent = 'Laat leeg om huidige poster te behouden';
     document.getElementById('event_description').value = description;
-    document.getElementById('event_date').value = date;
+
+    // Convert date from Y-m-d to d/m/Y format if needed
+    if (date) {
+        const dateParts = date.split('-');
+        if (dateParts.length === 3) {
+            document.getElementById('event_date').value = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+        } else {
+            document.getElementById('event_date').value = date;
+        }
+    } else {
+        document.getElementById('event_date').value = '';
+    }
+
     document.getElementById('event_location').value = location;
     document.getElementById('eventModal').classList.remove('hidden');
 }
@@ -174,4 +186,45 @@ document.getElementById('eventModal').addEventListener('click', function(e) {
         closeEventModal();
     }
 });
+
+// Datum input formatter voor evenementen (dd/mm/yyyy)
+const eventDateInput = document.getElementById('event_date');
+if (eventDateInput) {
+    eventDateInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        if (value.length >= 5) {
+            value = value.slice(0, 5) + '/' + value.slice(5, 9);
+        }
+        e.target.value = value;
+    });
+}
+
+// Validatie bij submit van evenement formulier
+const eventForm = document.getElementById('eventForm');
+if (eventForm) {
+    eventForm.addEventListener('submit', function(e) {
+        const dateValue = eventDateInput.value;
+        const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        const match = dateValue.match(datePattern);
+
+        if (!match) {
+            e.preventDefault();
+            alert('Voer een geldige datum in (dd/mm/jjjj)');
+            return false;
+        }
+
+        const day = parseInt(match[1]);
+        const month = parseInt(match[2]);
+        const year = parseInt(match[3]);
+
+        if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900) {
+            e.preventDefault();
+            alert('Voer een geldige datum in');
+            return false;
+        }
+    });
+}
 </script>

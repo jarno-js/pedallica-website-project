@@ -35,8 +35,13 @@ class ProfielController extends Controller
             'house_number' => ['nullable', 'string', 'max:10'],
             'postal_code' => ['nullable', 'string', 'max:10'],
             'city' => ['nullable', 'string', 'max:255'],
-            'birth_date' => ['nullable', 'date'],
+            'birth_date' => ['nullable', 'string'],
         ]);
+
+        // Converteer datum van dd/mm/yyyy naar Y-m-d indien ingevuld
+        if (!empty($validated['birth_date']) && preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $validated['birth_date'], $matches)) {
+            $validated['birth_date'] = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+        }
 
         $user->update($validated);
 

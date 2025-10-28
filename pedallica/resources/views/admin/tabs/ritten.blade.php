@@ -6,6 +6,17 @@
         </button>
     </div>
 
+    <!-- Zoekbalk voor ritten -->
+    <div class="mb-6">
+        <div class="relative">
+            <input type="text" id="adminRittenZoekbalk" placeholder="Zoek ritten op naam, ploeg, locatie, datum..."
+                   class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+            <svg class="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+        </div>
+    </div>
+
     @if($ritten->count() > 0)
         <div class="space-y-4">
             @foreach($ritten as $rit)
@@ -167,14 +178,14 @@
                 <!-- Date -->
                 <div>
                     <label for="rit_date" class="block text-sm font-medium text-gray-700 mb-1">Datum *</label>
-                    <input type="date" name="date" id="rit_date" required
+                    <input type="text" name="date" id="rit_date" required placeholder="dd/mm/jjjj"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
                 </div>
 
                 <!-- Start Time -->
                 <div>
                     <label for="rit_start_time" class="block text-sm font-medium text-gray-700 mb-1">Start tijd</label>
-                    <input type="time" name="start_time" id="rit_start_time"
+                    <input type="text" name="start_time" id="rit_start_time" placeholder="HH:MM (24u)"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
                 </div>
 
@@ -275,7 +286,19 @@ function editRit(id, rit) {
     document.getElementById('rit_ploeg_id').value = rit.ploeg_id;
     document.getElementById('rit_title').value = rit.title;
     document.getElementById('rit_route_name').value = rit.route_name || '';
-    document.getElementById('rit_date').value = rit.date;
+
+    // Convert date from Y-m-d to d/m/Y format if needed
+    if (rit.date) {
+        const dateParts = rit.date.split('-');
+        if (dateParts.length === 3) {
+            document.getElementById('rit_date').value = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+        } else {
+            document.getElementById('rit_date').value = rit.date;
+        }
+    } else {
+        document.getElementById('rit_date').value = '';
+    }
+
     document.getElementById('rit_start_time').value = rit.start_time || '';
     document.getElementById('rit_distance').value = rit.distance || '';
     document.getElementById('rit_location').value = rit.location || '';
@@ -297,4 +320,86 @@ document.getElementById('ritModal').addEventListener('click', function(e) {
         closeRitModal();
     }
 });
+
+// Zoekfunctie voor ritten in admin
+const adminRittenZoekbalk = document.getElementById('adminRittenZoekbalk');
+if (adminRittenZoekbalk) {
+    adminRittenZoekbalk.addEventListener('input', function(e) {
+        const zoekterm = e.target.value.toLowerCase();
+        const rittenCards = document.querySelectorAll('.space-y-4 > div');
+
+        rittenCards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            if (text.includes(zoekterm)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+}
+
+// Datum input formatter voor ritten (dd/mm/yyyy)
+const ritDateInput = document.getElementById('rit_date');
+if (ritDateInput) {
+    ritDateInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        if (value.length >= 5) {
+            value = value.slice(0, 5) + '/' + value.slice(5, 9);
+        }
+        e.target.value = value;
+    });
+}
+
+// Tijd input formatter (HH:MM 24u formaat)
+const ritTimeInput = document.getElementById('rit_start_time');
+if (ritTimeInput) {
+    ritTimeInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + ':' + value.slice(2, 4);
+        }
+        e.target.value = value;
+    });
+}
+
+// Validatie bij submit van rit formulier
+const ritForm = document.getElementById('ritForm');
+if (ritForm) {
+    ritForm.addEventListener('submit', function(e) {
+        const dateValue = ritDateInput.value;
+        const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        const match = dateValue.match(datePattern);
+
+        if (!match) {
+            e.preventDefault();
+            alert('Voer een geldige datum in (dd/mm/jjjj)');
+            return false;
+        }
+
+        const day = parseInt(match[1]);
+        const month = parseInt(match[2]);
+        const year = parseInt(match[3]);
+
+        if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900) {
+            e.preventDefault();
+            alert('Voer een geldige datum in');
+            return false;
+        }
+
+        // Valideer tijd indien ingevuld
+        const timeValue = ritTimeInput.value;
+        if (timeValue) {
+            const timePattern = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/;
+            if (!timePattern.test(timeValue)) {
+                e.preventDefault();
+                alert('Voer een geldige tijd in (HH:MM, 24-uurs formaat)');
+                return false;
+            }
+        }
+    });
+}
 </script>

@@ -90,7 +90,7 @@
                     <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-2">
                         Geboortedatum <span class="text-red-500">*</span>
                     </label>
-                    <input type="date" name="birth_date" id="birth_date" value="{{ old('birth_date') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 @error('birth_date') border-red-500 @enderror">
+                    <input type="text" name="birth_date" id="birth_date" value="{{ old('birth_date') }}" required placeholder="dd/mm/jjjj" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 @error('birth_date') border-red-500 @enderror">
                     @error('birth_date')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -204,6 +204,42 @@
                 preview.parentElement.querySelector('svg').classList.add('hidden');
             }
             reader.readAsDataURL(file);
+        }
+    });
+
+    // Datum input formatter (dd/mm/yyyy)
+    const birthDateInput = document.getElementById('birth_date');
+    birthDateInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        if (value.length >= 5) {
+            value = value.slice(0, 5) + '/' + value.slice(5, 9);
+        }
+        e.target.value = value;
+    });
+
+    // Validatie bij submit
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const dateValue = birthDateInput.value;
+        const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        const match = dateValue.match(datePattern);
+
+        if (!match) {
+            e.preventDefault();
+            alert('Voer een geldige datum in (dd/mm/jjjj)');
+            return false;
+        }
+
+        const day = parseInt(match[1]);
+        const month = parseInt(match[2]);
+        const year = parseInt(match[3]);
+
+        if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900 || year > new Date().getFullYear()) {
+            e.preventDefault();
+            alert('Voer een geldige datum in');
+            return false;
         }
     });
 </script>
