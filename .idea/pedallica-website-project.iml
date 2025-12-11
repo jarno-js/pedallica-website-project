@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/pedallica/app" isTestSource="false" packagePrefix="App\" />
+      <sourceFolder url="file://$MODULE_DIR$/pedallica/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/pedallica/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/pedallica/tests" isTestSource="true" packagePrefix="Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/pedallica/tests/Feature" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/pedallica/tests/Unit" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/brick/math" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/carbonphp/carbon-doctrine-types" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/dflydev/dot-access-data" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/doctrine/inflector" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/doctrine/lexer" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/dragonmantank/cron-expression" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/egulias/email-validator" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/fakerphp/faker" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/filp/whoops" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/fruitcake/php-cors" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/graham-campbell/result-type" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/guzzlehttp/uri-template" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/hamcrest/hamcrest-php" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/laravel/framework" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/laravel/pail" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/laravel/pint" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/laravel/prompts" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/laravel/sail" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/laravel/serializable-closure" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/laravel/tinker" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/league/commonmark" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/league/config" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/league/flysystem" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/league/flysystem-local" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/league/mime-type-detection" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/league/uri" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/league/uri-interfaces" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/mockery/mockery" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/monolog/monolog" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/myclabs/deep-copy" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/nesbot/carbon" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/nette/schema" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/nette/utils" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/nikic/php-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/nunomaduro/collision" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/nunomaduro/termwind" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/phar-io/manifest" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/phar-io/version" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/phpoption/phpoption" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/phpunit/php-code-coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/phpunit/php-file-iterator" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/phpunit/php-invoker" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/phpunit/php-text-template" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/phpunit/php-timer" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/phpunit/phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/psr/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/psr/event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/psr/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/psr/simple-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/psy/psysh" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/ramsey/collection" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/ramsey/uuid" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/cli-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/code-unit" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/code-unit-reverse-lookup" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/comparator" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/complexity" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/diff" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/environment" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/exporter" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/global-state" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/lines-of-code" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/object-enumerator" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/object-reflector" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/recursion-context" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/type" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/sebastian/version" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/staabm/side-effects-detector" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/console" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/css-selector" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/error-handler" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/event-dispatcher-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/finder" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/http-foundation" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/http-kernel" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/mailer" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/mime" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-intl-grapheme" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-intl-idn" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-intl-normalizer" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-php80" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-php83" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-php84" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-php85" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/polyfill-uuid" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/process" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/routing" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/service-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/string" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/translation" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/translation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/uid" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/var-dumper" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/theseer/tokenizer" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/tijsverkoyen/css-to-inline-styles" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/vlucas/phpdotenv" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/voku/portable-ascii" />
+      <excludeFolder url="file://$MODULE_DIR$/pedallica/vendor/webmozart/assert" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
