@@ -78,7 +78,7 @@ Volg deze stappen om het project lokaal te installeren:
 
 ## Contributing
 ```bash
-git clone <jouw-repository-url>
+git clone https://github.com/jarno-js/pedallica-website-project.git
 cd pedallica
 ```
 
