@@ -1,6 +1,16 @@
 # Pedallica - Wielerclub Website
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Een moderne webapplicatie voor wielerclub Pedallica waarbij leden zich kunnen registreren, ritten kunnen bekijken, evenementen kunnen volgen en sponsors kunnen raadplegen. Administrators hebben uitgebreide rechten om de hele website te beheren via een admin dashboard.
+
+![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat&logo=laravel)
+![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php)
+![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=flat&logo=mysql)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?style=flat&logo=tailwind-css)
+
+---
+
+## 📋 Inhoudsopgave
+
 - [Over het Project](#over-het-project)
 - [Features](#features)
 - [Technische Requirements](#technische-requirements)
@@ -9,104 +19,118 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - [Standaard Admin Account](#standaard-admin-account)
 - [Project Structuur](#project-structuur)
 - [Gebruikte Technologieën](#gebruikte-technologieën)
+- [Development](#development)
+- [Troubleshooting](#troubleshooting)
 - [Bronvermeldingen](#bronvermeldingen)
+- [Licentie](#licentie)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-## Over het Project
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-Pedallica is een moderne webapplicatie voor een wielerclub waarbij leden zich kunnen registreren, ritten kunnen bekijken, evenementen kunnen volgen en nieuws kunnen lezen. Administrators hebben uitgebreide rechten om de hele website te beheren via een admin dashboard.
+## 📖 Over het Project
 
-## Learning Laravel
-## Features
+Pedallica is een full-stack webapplicatie gebouwd met Laravel 11 voor een Belgische wielerclub. De applicatie biedt een complete oplossing voor clubbeheer waarbij leden zich kunnen registreren, ritten kunnen inschrijven, evenementen kunnen volgen en contact kunnen opnemen met de club. Administrators kunnen via een centraal dashboard alle aspecten van de website beheren.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Dit project is ontwikkeld als schoolopdracht voor **Erasmushogeschool Brussel** en demonstreert moderne webontwikkeling technieken met focus op:
+- Veilige authenticatie en autorisatie
+- CRUD operaties
+- Many-to-many database relaties
+- File uploads en beheer
+- Responsive design
+- Component-based architecture
+
+---
+
+## ✨ Features
+
 ### Gebruikers Functionaliteiten
-- **Account Registratie**: Nieuwe gebruikers kunnen een account aanmaken
+
+- **Account Registratie**: Nieuwe gebruikers kunnen een account aanmaken met profielfoto
 - **Login Systeem**: Veilige authenticatie met 'Remember Me' functionaliteit
 - **Profielbeheer**:
-  - Persoonlijke gegevens aanpassen
-  - Profielfoto uploaden
+  - Persoonlijke gegevens aanpassen (inclusief username en about me)
+  - Profielfoto uploaden/verwijderen
   - Wachtwoord wijzigen
-- **Evenementen Bekijken**: Overzicht van komende en voorbije evenementen
-- **Ritten per Ploeg**: Bekijk ritten georganiseerd per wielerploeg
-- **Nieuws**: Lees de laatste nieuwsberichten van de club
-- **Sponsors**: Overzicht van clubsponsors
+  - Publieke profielpagina's (toegankelijk via username)
+- **Ritten per Ploeg**:
+  - Bekijk ritten georganiseerd per wielerploeg (A, B, C, MTB, VA)
+  - Download GPX bestanden voor routeplanning
+  - Bekijk ritdetails (afstand, hoogtemeters, startlocatie, tijdstip)
+  - Inschrijven voor ritten (many-to-many relatie)
+- **Evenementen**: Overzicht van komende en voorbije evenementen met posters
+- **Sponsors**: Dynamische sponsor bar met alle actieve clubsponsors
+- **FAQ Pagina**: Veelgestelde vragen georganiseerd per categorie
+- **Contact Formulier**: Stuur berichten naar de club via email
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 ### Admin Functionaliteiten
-- **Gebruikersbeheer**:
-  - Nieuwe gebruikers goedkeuren
-  - Gebruikers promoveren tot admin of rechten afnemen
-  - Gebruikers verwijderen
-  - Manueel nieuwe gebruikers aanmaken
-- **Nieuwsbeheer**: Nieuws toevoegen, bewerken en verwijderen
-- **Evenementenbeheer**: Evenementen aanmaken en beheren met posters
-- **Rittenbeheer**: Ritten toevoegen met GPX bestanden, foto's en routedetails
-- **Sponsorbeheer**: Sponsors toevoegen en beheren met logo's
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-## Technische Requirements
+**Gebruikersbeheer**:
+- Nieuwe gebruikers goedkeuren (approval systeem)
+- Gebruikers promoveren tot admin of rechten afnemen
+- Gebruikers verwijderen
+- Overzicht van alle leden
 
-## Laravel Sponsors
-- PHP >= 8.2
-- Composer
-- MySQL/MariaDB
-- Node.js & NPM (voor frontend assets)
+**Rittenbeheer**:
+- Ritten toevoegen met volledige details
+- GPX bestanden uploaden
+- Rit foto's uploaden
+- Afstand en hoogtemeters bijhouden
+- Per ploeg organiseren
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-## Installatie
+**Evenementenbeheer**:
+- Evenementen aanmaken en beheren
+- Event posters uploaden
+- Automatische detectie van gepasseerde evenementen
 
-### Premium Partners
-Volg deze stappen om het project lokaal te installeren:
+**Sponsorbeheer**:
+- Sponsors toevoegen met logo's
+- Sponsor websites koppelen
+- Actief/inactief status beheren
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+**FAQ Beheer**:
+- FAQ categorieën aanmaken
+- Vragen en antwoorden toevoegen/bewerken
+- Volgorde bepalen
+
+---
+
+## 🔧 Technische Requirements
+
+- **PHP** >= 8.2
+- **Composer** (latest)
+- **MySQL/MariaDB** >= 8.0
+- **Node.js** >= 18.x
+- **NPM** >= 9.x
+- **Git**
+
+---
+
+## 🚀 Installatie
+
 ### 1. Clone de Repository
 
-## Contributing
 ```bash
 git clone https://github.com/jarno-js/pedallica-website-project.git
 cd pedallica
 ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 ### 2. Installeer Dependencies
 
-## Code of Conduct
 ```bash
 # Install PHP dependencies
 composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 # Install NPM dependencies
 npm install
 ```
 
-## Security Vulnerabilities
 ### 3. Environment Setup
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 Kopieer het `.env.example` bestand naar `.env`:
 
-## License
 ```bash
 copy .env.example .env
 ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 Genereer een applicatie key:
 
 ```bash
@@ -122,32 +146,34 @@ DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=pedallica
-DB_USERNAME=jouw_database_gebruiker
+DB_USERNAME=root
 DB_PASSWORD=jouw_database_wachtwoord
 ```
 
 Maak de database aan in MySQL:
 
 ```sql
-CREATE DATABASE pedallica;
+CREATE DATABASE pedallica CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-### 5. Email Configuratie (Optioneel)
+### 5. Email Configuratie (voor Contact Formulier)
 
-Voor email functionaliteiten (wachtwoord reset), configureer je mail settings in `.env`:
+Configureer je mail settings in `.env`:
 
 ```env
 MAIL_MAILER=smtp
-MAIL_HOST=jouw_mail_host
+MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=jouw_email
-MAIL_PASSWORD=jouw_wachtwoord
+MAIL_USERNAME=jouw_email@gmail.com
+MAIL_PASSWORD=jouw_app_wachtwoord
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=noreply@pedallica.be
-MAIL_FROM_NAME="Pedallica"
+MAIL_FROM_NAME="Pedallica VZW"
 ```
 
-## Database Setup
+---
+
+## 💾 Database Setup
 
 Voer de migrations en seeders uit om de database op te zetten met basisdata:
 
@@ -156,92 +182,131 @@ php artisan migrate:fresh --seed
 ```
 
 Dit commando zal:
-- Alle database tabellen aanmaken
-- Een default admin account aanmaken
-- Basis ploegen (teams) aanmaken
-- Test data toevoegen
+- ✅ Alle database tabellen aanmaken
+- ✅ Een default admin account aanmaken
+- ✅ Basis ploegen (A, B, C, MTB, VA) aanmaken
+- ✅ Test FAQ data toevoegen
+- ✅ Sponsor data toevoegen
+- ✅ Evenement data toevoegen
 
 ### Upload Directories
 
-Zorg ervoor dat de volgende directories bestaan en schrijfrechten hebben:
+De volgende directories worden automatisch aangemaakt bij eerste gebruik:
 
-```bash
-public/uploads/evenementen/posters
-public/uploads/ritten/photos
-public/uploads/ritten/gpx
-public/uploads/sponsors/logos
-public/uploads/profiles
+```
+public/uploads/
+├── leden/
+│   └── profielfoto/          # Profielfotos van leden
+├── sponsors/
+│   └── logos/                # Sponsor logo's
+├── evenementen/
+│   └── posters/              # Evenement posters
+└── ritten/
+    ├── gpx/                  # GPX route bestanden
+    └── photos/               # Rit foto's
 ```
 
-Deze worden automatisch aangemaakt wanneer je bestanden upload, maar je kan ze ook manueel aanmaken.
+Je kan deze ook manueel aanmaken:
 
-## Standaard Admin Account
+```bash
+mkdir -p public/uploads/leden/profielfoto
+mkdir -p public/uploads/sponsors/logos
+mkdir -p public/uploads/evenementen/posters
+mkdir -p public/uploads/ritten/gpx
+mkdir -p public/uploads/ritten/photos
+```
 
-Na het uitvoeren van de seeders is er een admin account beschikbaar:
+---
 
+## 🔐 Standaard Admin Account
+
+Na het uitvoeren van de seeders zijn er twee admin accounts beschikbaar:
+
+**Voor schoolopdracht (EHB vereiste):**
+- **Email**: `admin@ehb.be`
+- **Wachtwoord**: `Password!321`
+
+**Voor clubgebruik:**
 - **Email**: `admin@pedallica.be`
 - **Wachtwoord**: `Pedalica1703!`
 
-**Let op**: Wijzig dit wachtwoord onmiddellijk in een productie omgeving!
+⚠️ **Belangrijk**: Wijzig deze wachtwoorden onmiddellijk in een productie omgeving!
 
-## Project Structuur
+---
+
+## 📁 Project Structuur
 
 ### Models
-- `User`: Gebruikers van de website
-- `News`: Nieuwsberichten
-- `Event`: Evenementen
-- `Rit`: Wielerritten
-- `Ploeg`: Wielerploegen/teams
-- `Sponsor`: Sponsors
+
+| Model | Beschrijving | Relaties |
+|-------|--------------|----------|
+| `User` | Gebruikers van de website | belongsToMany: Rit |
+| `Rit` | Wielerritten | belongsTo: Ploeg, belongsToMany: User |
+| `Ploeg` | Wielerploegen/teams | hasMany: Rit |
+| `Event` | Evenementen | - |
+| `Sponsor` | Sponsors | - |
+| `Faq` | FAQ vragen | belongsTo: FaqCategory |
+| `FaqCategory` | FAQ categorieën | hasMany: Faq |
 
 ### Controllers
-- `Auth/RegisterController`: Registratie functionaliteit
-- `Auth/LoginController`: Login/logout functionaliteit
-- `ProfielController`: Profielbeheer
-- `DashboardController`: Gebruiker dashboard
-- `Admin/AdminDashboardController`: Admin panel met alle CRUD operaties
-- `HomepageController`: Homepagina
-- `EvenementenController`: Evenementen overzicht
-- `PloegenController`: Ploegen overzicht
-- `SponsorsController`: Sponsors overzicht
+
+**Authentication:**
+- `Auth/RegisterController` - Registratie functionaliteit
+- `Auth/LoginController` - Login/logout functionaliteit
+
+**User:**
+- `ProfielController` - Profielbeheer (privé en publiek)
+- `DashboardController` - Gebruiker dashboard
+
+**Public:**
+- `HomepageController` - Homepagina
+- `EvenementenController` - Evenementen overzicht
+- `PloegenController` - Ploegen en ritten overzicht
+- `SponsorsController` - Sponsors overzicht
+- `FaqController` - FAQ pagina
+- `ContactController` - Contact formulier met email
+
+**Admin:**
+- `Admin/AdminDashboardController` - Centraal admin panel met alle CRUD operaties
 
 ### Middleware
-- `auth`: Controleert of gebruiker ingelogd is
-- `approved`: Controleert of gebruiker goedgekeurd is door admin
-- `admin`: Controleert of gebruiker admin rechten heeft
 
-## Gebruikte Technologieën
+- `auth` - Controleert of gebruiker ingelogd is
+- `approved` - Controleert of gebruiker goedgekeurd is door admin
+- `admin` - Controleert of gebruiker admin rechten heeft
+
+### Blade Components
+
+- `components/alert.blade.php` - Herbruikbare alert component (success, error, warning, info)
+
+### View Composers
+
+- `SponsorComposer` - Maakt sponsors globaal beschikbaar voor sponsor bar
+
+---
+
+## 🛠️ Gebruikte Technologieën
 
 ### Backend
-- **Laravel 11.x**: PHP Framework
-- **MySQL**: Database
-- **Eloquent ORM**: Database interacties
+- **Laravel 11.x** - PHP Framework
+- **MySQL 8.0+** - Relationele database
+- **Eloquent ORM** - Database abstractielaag
+- **Laravel Mail** - Email functionaliteit
+- **Blade Templating** - Laravel's template engine
 
 ### Frontend
-- **Tailwind CSS**: Utility-first CSS framework
-- **Blade Templating**: Laravel's templating engine
-- **Alpine.js**: Lichtgewicht JavaScript framework (voor interactieve componenten)
+- **Tailwind CSS** - Utility-first CSS framework
+- **Vanilla JavaScript** - Interactiviteit (modals, dropdowns)
+- **Hero Icons** - SVG iconen
 
-### Dependencies
-- **Laravel Breeze**: Authentication scaffolding
-- **Carbon**: Datum/tijd manipulatie
+### Development Tools
+- **Composer** - PHP dependency manager
+- **NPM** - Node package manager
+- **Vite** - Frontend build tool
 
-## Bronvermeldingen
+---
 
-### Code & Documentatie
-- Laravel Documentatie: https://laravel.com/docs
-- Tailwind CSS Documentatie: https://tailwindcss.com/docs
-- Laravel Breeze: https://laravel.com/docs/starter-kits#laravel-breeze
-
-### Design Inspiratie
-- Hero Icons: https://heroicons.com/ (voor SVG iconen)
-- Tailwind UI: https://tailwindui.com/ (voor layout inspiratie)
-
-### Externe Bronnen
-- Stack Overflow: Voor het oplossen van specifieke technische problemen
-- Laravel Daily: Voor best practices en tips
-
-## Development
+## 💻 Development
 
 ### Run Development Server
 
@@ -265,7 +330,7 @@ Voor productie build:
 npm run build
 ```
 
-## Belangrijke Commando's
+### Belangrijke Commando's
 
 ```bash
 # Database migrations uitvoeren
@@ -278,46 +343,121 @@ php artisan migrate:fresh --seed
 php artisan cache:clear
 php artisan config:clear
 php artisan view:clear
+php artisan route:clear
 
-# Storage link aanmaken (voor publieke uploads)
-php artisan storage:link
-
-# Event status updaten (controleert of events gepasseerd zijn)
-php artisan events:update-status
+# View cache opbouwen (productie)
+php artisan view:cache
+php artisan config:cache
+php artisan route:cache
 ```
 
-## Troubleshooting
+---
+
+## 🐛 Troubleshooting
 
 ### Permissie Problemen
 
 Als je permissie errors krijgt, zorg ervoor dat de storage en bootstrap/cache directories schrijfbaar zijn:
 
+**Linux/Mac:**
 ```bash
 chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
 ```
+
+**Windows:**
+- Rechtsklik op `storage` en `bootstrap/cache` folders
+- Ga naar Properties → Security
+- Geef volledige rechten aan je gebruiker
 
 ### Database Connection Failed
 
 Controleer of:
-- MySQL service draait
-- Database credentials correct zijn in `.env`
-- Database bestaat
+- ✅ MySQL service draait
+- ✅ Database credentials correct zijn in `.env`
+- ✅ Database bestaat (run `CREATE DATABASE pedallica;`)
+- ✅ Database gebruiker heeft de juiste rechten
 
 ### Upload Errors
 
 Als uploads niet werken:
-- Controleer of upload directories bestaan
-- Controleer schrijfrechten op `public/uploads`
-- Controleer `php.ini` voor `upload_max_filesize` en `post_max_size`
+- ✅ Controleer of upload directories bestaan
+- ✅ Controleer schrijfrechten op `public/uploads`
+- ✅ Controleer `php.ini` voor `upload_max_filesize` (min 10M) en `post_max_size` (min 10M)
 
-## Contact & Support
+### View/Cache Issues
 
-Voor vragen over dit project, neem contact op met de ontwikkelaar.
+Als je wijzigingen niet ziet:
 
-## Licentie
+```bash
+php artisan view:clear
+php artisan cache:clear
+```
 
-Dit project is ontwikkeld als schoolproject voor Erasmushogeschool Brussel.
+### Migration Errors
+
+Als migrations falen:
+
+```bash
+# Reset database volledig
+php artisan migrate:fresh --seed
+
+# Of specifieke migration terugdraaien
+php artisan migrate:rollback --step=1
+```
 
 ---
 
-**Ontwikkeld met Laravel 11.x - 2025**
+## 📚 Bronvermeldingen
+
+### Code & Documentatie
+- [Laravel Documentatie](https://laravel.com/docs/11.x) - Laravel framework
+- [Tailwind CSS Documentatie](https://tailwindcss.com/docs) - CSS styling
+- [Laravel Breeze](https://laravel.com/docs/11.x/starter-kits#laravel-breeze) - Authentication scaffolding
+- [Eloquent Relationships](https://laravel.com/docs/11.x/eloquent-relationships) - Database relaties
+
+### Design & Assets
+- [Hero Icons](https://heroicons.com/) - SVG iconen
+- [Tailwind UI](https://tailwindui.com/) - Layout inspiratie
+- [Unsplash](https://unsplash.com/) - Placeholder images
+
+### Externe Bronnen
+- [Stack Overflow](https://stackoverflow.com/) - Technische problemsolving
+- [Laravel Daily](https://laraveldaily.com/) - Best practices en tips
+- [Laracasts](https://laracasts.com/) - Video tutorials
+
+### Logo & Branding
+- Pedallica logo's zijn eigendom van Wielerclub Pedallica VZW
+
+---
+
+## 📄 Licentie
+
+Dit project is ontwikkeld als **schoolproject** voor Erasmushogeschool Brussel (EHB).
+
+**Ontwikkelaar**: Jarno JS
+**School**: Erasmushogeschool Brussel
+**Jaar**: 2024-2025
+**Framework**: Laravel 11.x
+
+Het project is gebouwd met open-source technologieën. De Laravel framework is gelicenseerd onder de [MIT license](https://opensource.org/licenses/MIT).
+
+---
+
+## 📞 Contact & Support
+
+Voor vragen over dit project:
+
+- **Email**: info@pedallica.be
+- **Website**: [www.pedallica.be](https://www.pedallica.be)
+- **GitHub**: [jarno-js/pedallica-website-project](https://github.com/jarno-js/pedallica-website-project)
+
+---
+
+<div align="center">
+
+**Ontwikkeld met ❤️ voor Wielerclub Pedallica**
+
+*Laravel 11.x • PHP 8.2 • MySQL • Tailwind CSS*
+
+</div>
