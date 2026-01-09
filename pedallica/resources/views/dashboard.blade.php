@@ -84,16 +84,11 @@
                 @if($tab === 'ritten' && $currentPloeg)
                     <!-- Ploeg Ritten Tab -->
                     <div>
-                        <div class="flex justify-between items-center mb-6">
-                            <div>
-                                <h2 class="text-3xl font-bold text-gray-900">{{ $currentPloeg->name }}</h2>
-                                @if($currentPloeg->description)
-                                    <p class="text-gray-600 mt-2">{{ $currentPloeg->description }}</p>
-                                @endif
-                            </div>
-                            <button class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors font-semibold">
-                                + Rit Toevoegen
-                            </button>
+                        <div class="mb-6">
+                            <h2 class="text-3xl font-bold text-gray-900">{{ $currentPloeg->name }}</h2>
+                            @if($currentPloeg->description)
+                                <p class="text-gray-600 mt-2">{{ $currentPloeg->description }}</p>
+                            @endif
                         </div>
 
                         <!-- Zoekbalk voor ritten -->
@@ -184,7 +179,6 @@
                                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                                 <p class="text-gray-500 text-lg">Nog geen ritten gepland voor {{ $currentPloeg->name }}</p>
-                                <p class="text-gray-400 text-sm mt-2">Klik op "Rit Toevoegen" om een nieuwe rit te plannen</p>
                             </div>
                         @endif
                     </div>
