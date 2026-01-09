@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
+        'username',
         'email',
         'password',
         'birth_date',
@@ -30,6 +31,7 @@ class User extends Authenticatable
         'city',
         'country',
         'profile_picture',
+        'about_me',
         'approved',
         'is_admin',
     ];
@@ -58,5 +60,13 @@ class User extends Authenticatable
             'approved' => 'boolean',
             'is_admin' => 'boolean',
         ];
+    }
+
+    /**
+     * Een user kan zich inschrijven voor meerdere ritten
+     */
+    public function ritten()
+    {
+        return $this->belongsToMany(Rit::class)->withTimestamps();
     }
 }

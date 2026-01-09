@@ -14,9 +14,9 @@
 
         <!-- Success Message -->
         @if(session('success'))
-            <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-md">
+            <x-alert type="success" class="mb-6">
                 {{ session('success') }}
-            </div>
+            </x-alert>
         @endif
 
         <!-- Profielfoto -->
@@ -116,6 +116,17 @@
                         @enderror
                     </div>
 
+                    <!-- Username -->
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Gebruikersnaam *</label>
+                        <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('username') border-red-500 @enderror">
+                        @error('username')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Deze naam wordt op je profiel getoond</p>
+                    </div>
+
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">E-mailadres *</label>
@@ -145,6 +156,17 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+
+                <!-- Over mij sectie -->
+                <div class="mt-6">
+                    <label for="about_me" class="block text-sm font-medium text-gray-700 mb-2">Over mij</label>
+                    <textarea id="about_me" name="about_me" rows="4" maxlength="500" placeholder="Vertel iets over jezelf..."
+                              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('about_me') border-red-500 @enderror">{{ old('about_me', $user->about_me) }}</textarea>
+                    @error('about_me')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    <p class="mt-1 text-xs text-gray-500">Maximaal 500 karakters</p>
                 </div>
 
                 <!-- Adres sectie -->

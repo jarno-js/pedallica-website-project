@@ -19,6 +19,25 @@
             </div>
         @endif
 
+        <!-- Error Message -->
+        @if(session('error'))
+            <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <!-- Validation Errors -->
+        @if($errors->any())
+            <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                <strong>Er zijn fouten opgetreden:</strong>
+                <ul class="mt-2 list-disc list-inside">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- Tab Navigation -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
             <div class="border-b border-gray-200">

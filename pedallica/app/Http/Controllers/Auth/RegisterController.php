@@ -28,6 +28,7 @@ class RegisterController extends Controller
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users', 'regex:/^[a-zA-Z0-9_]+$/'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'birth_date' => ['required', 'string'],
@@ -49,6 +50,7 @@ class RegisterController extends Controller
         $user = User::create([
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
+            'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'birth_date' => $validated['birth_date'],
@@ -64,13 +66,14 @@ class RegisterController extends Controller
         // Verwerk profielfoto als deze is geüpload (nu met user ID)
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
-            $filename = strtolower($validated['first_name'] . $validated['last_name']) . '-' . $user->id . '.' . $file->getClientOriginalExtension();
+            $extension = $file->getClientOriginalExtension();
+            $filename = 'lid-' . $user->id . '.' . $extension;
 
-            // Verplaats bestand naar public folder
-            $file->move(public_path(), $filename);
+            // Verplaats bestand naar uploads/leden/profielfoto/ folder
+            $file->move(public_path('uploads/leden/profielfoto'), $filename);
 
             // Update user met profielfoto path
-            $user->update(['profile_picture' => $filename]);
+            $user->update(['profile_picture' => 'uploads/leden/profielfoto/' . $filename]);
         }
 
         // Zorg ervoor dat gebruiker NIET automatisch wordt ingelogd

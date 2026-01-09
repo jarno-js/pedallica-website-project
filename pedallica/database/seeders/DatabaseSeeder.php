@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PloegSeeder::class,
             AdminSeeder::class,
+            FaqSeeder::class,
+            SponsorSeeder::class,
+            EventSeeder::class,
         ]);
     }
 }

@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfielController;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 
 Route::get('/', [HomepageController::class, 'index'])->name('home');
@@ -16,6 +18,12 @@ Route::get('/fotos-sponsors', [SponsorsController::class, 'index'])->name('fotos
 Route::get('/fotos-ploegen', [PloegenController::class, 'index'])->name('fotos-ploegen');
 Route::get('/fotos-ploegen/{slug}', [PloegenController::class, 'show'])->name('fotos-ploegen.show');
 Route::get('/evenementen', [EvenementenController::class, 'index'])->name('evenementen');
+Route::get('/faq', [FaqController::class, 'index'])->name('faq');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+// Publieke profielpagina (voor iedereen toegankelijk)
+Route::get('/users/{username}', [ProfielController::class, 'showPublic'])->name('profiel.public');
 
 // Authentication Routes
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -46,11 +54,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::put('/users/{id}/remove-admin', [AdminDashboardController::class, 'removeAdmin'])->name('admin.users.remove-admin');
     Route::delete('/users/{id}', [AdminDashboardController::class, 'deleteUser'])->name('admin.users.delete');
 
-    // News management
-    Route::post('/news', [AdminDashboardController::class, 'storeNews'])->name('admin.news.store');
-    Route::put('/news/{id}', [AdminDashboardController::class, 'updateNews'])->name('admin.news.update');
-    Route::delete('/news/{id}', [AdminDashboardController::class, 'deleteNews'])->name('admin.news.delete');
-
     // Sponsor management
     Route::post('/sponsors', [AdminDashboardController::class, 'storeSponsor'])->name('admin.sponsors.store');
     Route::put('/sponsors/{id}', [AdminDashboardController::class, 'updateSponsor'])->name('admin.sponsors.update');
@@ -65,4 +68,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/ritten', [AdminDashboardController::class, 'storeRit'])->name('admin.ritten.store');
     Route::put('/ritten/{id}', [AdminDashboardController::class, 'updateRit'])->name('admin.ritten.update');
     Route::delete('/ritten/{id}', [AdminDashboardController::class, 'deleteRit'])->name('admin.ritten.delete');
+
+    // FAQ Category management
+    Route::post('/faq-categories', [AdminDashboardController::class, 'storeFaqCategory'])->name('admin.faq-categories.store');
+    Route::put('/faq-categories/{id}', [AdminDashboardController::class, 'updateFaqCategory'])->name('admin.faq-categories.update');
+    Route::delete('/faq-categories/{id}', [AdminDashboardController::class, 'deleteFaqCategory'])->name('admin.faq-categories.delete');
+
+    // FAQ management
+    Route::post('/faqs', [AdminDashboardController::class, 'storeFaq'])->name('admin.faqs.store');
+    Route::put('/faqs/{id}', [AdminDashboardController::class, 'updateFaq'])->name('admin.faqs.update');
+    Route::delete('/faqs/{id}', [AdminDashboardController::class, 'deleteFaq'])->name('admin.faqs.delete');
 });

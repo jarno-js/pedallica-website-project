@@ -67,6 +67,15 @@
                                         {{ $rit->distance }} km
                                     </div>
                                 @endif
+                                @if($rit->elevation_gain)
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                        </svg>
+                                        {{ $rit->elevation_gain }}m
+                                    </div>
+                                @endif
                                 @if($rit->location)
                                     <div class="flex items-center">
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,6 +205,13 @@
                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
                 </div>
 
+                <!-- Elevation Gain -->
+                <div>
+                    <label for="rit_elevation_gain" class="block text-sm font-medium text-gray-700 mb-1">Hoogtemeters</label>
+                    <input type="number" name="elevation_gain" id="rit_elevation_gain"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                </div>
+
                 <!-- Location -->
                 <div>
                     <label for="rit_location" class="block text-sm font-medium text-gray-700 mb-1">Start locatie</label>
@@ -268,6 +284,7 @@ function openRitModal() {
     document.getElementById('rit_date').value = '';
     document.getElementById('rit_start_time').value = '';
     document.getElementById('rit_distance').value = '';
+    document.getElementById('rit_elevation_gain').value = '';
     document.getElementById('rit_location').value = '';
     document.getElementById('rit_start_address').value = '';
     document.getElementById('rit_download_link').value = '';
@@ -301,6 +318,7 @@ function editRit(id, rit) {
 
     document.getElementById('rit_start_time').value = rit.start_time || '';
     document.getElementById('rit_distance').value = rit.distance || '';
+    document.getElementById('rit_elevation_gain').value = rit.elevation_gain || '';
     document.getElementById('rit_location').value = rit.location || '';
     document.getElementById('rit_start_address').value = rit.start_address || '';
     document.getElementById('rit_download_link').value = rit.download_link || '';

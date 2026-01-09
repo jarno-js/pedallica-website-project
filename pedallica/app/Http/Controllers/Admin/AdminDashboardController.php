@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\News;
 use App\Models\Sponsor;
 use App\Models\Event;
 use App\Models\Rit;
 use App\Models\Ploeg;
+use App\Models\Faq;
+use App\Models\FaqCategory;
 use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
@@ -23,9 +24,6 @@ class AdminDashboardController extends Controller
         // Haal goedgekeurde gebruikers op
         $approvedUsers = User::where('approved', true)->orderBy('first_name')->get();
 
-        // Haal alle nieuws op
-        $nieuws = News::with('author')->orderBy('created_at', 'desc')->get();
-
         // Haal alle sponsors op
         $sponsors = Sponsor::orderBy('name')->get();
 
@@ -38,7 +36,11 @@ class AdminDashboardController extends Controller
         // Haal alle ploegen op voor dropdown (in logische volgorde)
         $ploegen = Ploeg::orderByRaw("FIELD(slug, 'pedallica-a', 'pedallica-b', 'pedallica-c', 'mtb', 'pedallicava')")->get();
 
-        return view('admin.dashboard', compact('tab', 'pendingUsers', 'approvedUsers', 'nieuws', 'sponsors', 'events', 'ritten', 'ploegen'));
+        // Haal alle FAQ categorieën en FAQs op
+        $faqCategories = FaqCategory::with('faqs')->ordered()->get();
+        $allFaqs = Faq::with('category')->ordered()->get();
+
+        return view('admin.dashboard', compact('tab', 'pendingUsers', 'approvedUsers', 'sponsors', 'events', 'ritten', 'ploegen', 'faqCategories', 'allFaqs'));
     }
 
     // Leden management
@@ -76,56 +78,6 @@ class AdminDashboardController extends Controller
 
         return redirect()->route('admin.dashboard', ['tab' => 'leden'])
             ->with('success', 'Gebruiker is verwijderd!');
-    }
-
-    // News management
-    public function storeNews(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'published' => 'required|boolean',
-        ]);
-
-        News::create([
-            'title' => $request->title,
-            'content' => $request->content,
-            'author_id' => auth()->id(),
-            'published' => $request->published,
-            'published_at' => $request->published ? now() : null,
-        ]);
-
-        return redirect()->route('admin.dashboard', ['tab' => 'newsletter'])
-            ->with('success', 'Nieuws is toegevoegd!');
-    }
-
-    public function updateNews(Request $request, $id)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'published' => 'required|boolean',
-        ]);
-
-        $news = News::findOrFail($id);
-        $news->update([
-            'title' => $request->title,
-            'content' => $request->content,
-            'published' => $request->published,
-            'published_at' => $request->published && !$news->published_at ? now() : $news->published_at,
-        ]);
-
-        return redirect()->route('admin.dashboard', ['tab' => 'newsletter'])
-            ->with('success', 'Nieuws is bijgewerkt!');
-    }
-
-    public function deleteNews($id)
-    {
-        $news = News::findOrFail($id);
-        $news->delete();
-
-        return redirect()->route('admin.dashboard', ['tab' => 'newsletter'])
-            ->with('success', 'Nieuws is verwijderd!');
     }
 
     // Sponsor management
@@ -313,49 +265,62 @@ class AdminDashboardController extends Controller
     // Rit management
     public function storeRit(Request $request)
     {
-        $request->validate([
-            'ploeg_id' => 'required|exists:ploegs,id',
-            'title' => 'required|string|max:255',
-            'route_name' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'date' => 'required|string',
-            'start_time' => 'nullable',
-            'location' => 'nullable|string|max:255',
-            'start_address' => 'nullable|string|max:255',
-            'distance' => 'nullable|integer',
-            'download_link' => 'nullable|url',
-            'gpx_file' => 'nullable|file|mimes:gpx|max:5120',
-            'photo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ploeg_id' => 'required|exists:ploegs,id',
+                'title' => 'required|string|max:255',
+                'route_name' => 'nullable|string|max:255',
+                'description' => 'nullable|string',
+                'date' => 'required|string',
+                'start_time' => 'nullable',
+                'location' => 'nullable|string|max:255',
+                'start_address' => 'nullable|string|max:255',
+                'distance' => 'nullable|integer',
+                'elevation_gain' => 'nullable|integer',
+                'download_link' => 'nullable|url',
+                'gpx_file' => 'nullable|file|max:5120',
+                'photo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
+            ]);
 
-        $data = $request->all();
+            $data = $validated;
 
-        // Converteer datum van dd/mm/yyyy naar Y-m-d
-        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $data['date'], $matches)) {
-            $data['date'] = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+            // Converteer datum van dd/mm/yyyy naar Y-m-d
+            if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $data['date'], $matches)) {
+                $data['date'] = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+            }
+
+            if ($request->hasFile('gpx_file')) {
+                $filename = time() . '-' . $request->file('gpx_file')->getClientOriginalName();
+                $request->file('gpx_file')->move(public_path('uploads/ritten/gpx'), $filename);
+                $data['gpx_file'] = 'uploads/ritten/gpx/' . $filename;
+            }
+
+            if ($request->hasFile('photo')) {
+                $filename = time() . '-' . $request->file('photo')->getClientOriginalName();
+                $request->file('photo')->move(public_path('uploads/ritten/photos'), $filename);
+                $data['photo'] = 'uploads/ritten/photos/' . $filename;
+            }
+
+            $rit = Rit::create($data);
+
+            \Log::info('Rit created successfully', ['rit_id' => $rit->id, 'title' => $rit->title]);
+
+            return redirect()->route('admin.dashboard', ['tab' => 'ritten'])
+                ->with('success', 'Rit is toegevoegd!');
+        } catch (\Exception $e) {
+            \Log::error('Error creating rit', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->route('admin.dashboard', ['tab' => 'ritten'])
+                ->with('error', 'Fout bij het toevoegen van de rit: ' . $e->getMessage());
         }
-
-        if ($request->hasFile('gpx_file')) {
-            $filename = time() . '-' . $request->file('gpx_file')->getClientOriginalName();
-            $request->file('gpx_file')->move(public_path('uploads/ritten/gpx'), $filename);
-            $data['gpx_file'] = 'uploads/ritten/gpx/' . $filename;
-        }
-
-        if ($request->hasFile('photo')) {
-            $filename = time() . '-' . $request->file('photo')->getClientOriginalName();
-            $request->file('photo')->move(public_path('uploads/ritten/photos'), $filename);
-            $data['photo'] = 'uploads/ritten/photos/' . $filename;
-        }
-
-        Rit::create($data);
-
-        return redirect()->route('admin.dashboard', ['tab' => 'ritten'])
-            ->with('success', 'Rit is toegevoegd!');
     }
 
     public function updateRit(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'ploeg_id' => 'required|exists:ploegs,id',
             'title' => 'required|string|max:255',
             'route_name' => 'nullable|string|max:255',
@@ -365,13 +330,14 @@ class AdminDashboardController extends Controller
             'location' => 'nullable|string|max:255',
             'start_address' => 'nullable|string|max:255',
             'distance' => 'nullable|integer',
+            'elevation_gain' => 'nullable|integer',
             'download_link' => 'nullable|url',
-            'gpx_file' => 'nullable|file|mimes:gpx|max:5120',
+            'gpx_file' => 'nullable|file|max:5120',
             'photo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
         ]);
 
         $rit = Rit::findOrFail($id);
-        $data = $request->all();
+        $data = $validated;
 
         // Converteer datum van dd/mm/yyyy naar Y-m-d
         if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $data['date'], $matches)) {
@@ -422,5 +388,91 @@ class AdminDashboardController extends Controller
 
         return redirect()->route('admin.dashboard', ['tab' => 'ritten'])
             ->with('success', 'Rit is verwijderd!');
+    }
+
+    // FAQ Category management
+    public function storeFaqCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        FaqCategory::create([
+            'name' => $request->name,
+            'order' => FaqCategory::count(),
+        ]);
+
+        return redirect()->route('admin.dashboard', ['tab' => 'faq'])
+            ->with('success', 'FAQ categorie is toegevoegd!');
+    }
+
+    public function updateFaqCategory(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category = FaqCategory::findOrFail($id);
+        $category->update(['name' => $request->name]);
+
+        return redirect()->route('admin.dashboard', ['tab' => 'faq'])
+            ->with('success', 'FAQ categorie is bijgewerkt!');
+    }
+
+    public function deleteFaqCategory($id)
+    {
+        $category = FaqCategory::findOrFail($id);
+        $category->delete();
+
+        return redirect()->route('admin.dashboard', ['tab' => 'faq'])
+            ->with('success', 'FAQ categorie is verwijderd!');
+    }
+
+    // FAQ management
+    public function storeFaq(Request $request)
+    {
+        $request->validate([
+            'faq_category_id' => 'required|exists:faq_categories,id',
+            'question' => 'required|string',
+            'answer' => 'required|string',
+        ]);
+
+        Faq::create([
+            'faq_category_id' => $request->faq_category_id,
+            'question' => $request->question,
+            'answer' => $request->answer,
+            'order' => Faq::where('faq_category_id', $request->faq_category_id)->count(),
+        ]);
+
+        return redirect()->route('admin.dashboard', ['tab' => 'faq'])
+            ->with('success', 'FAQ is toegevoegd!');
+    }
+
+    public function updateFaq(Request $request, $id)
+    {
+        $request->validate([
+            'faq_category_id' => 'required|exists:faq_categories,id',
+            'question' => 'required|string',
+            'answer' => 'required|string',
+        ]);
+
+        $faq = Faq::findOrFail($id);
+        $faq->update([
+            'faq_category_id' => $request->faq_category_id,
+            'question' => $request->question,
+            'answer' => $request->answer,
+        ]);
+
+        return redirect()->route('admin.dashboard', ['tab' => 'faq'])
+            ->with('success', 'FAQ is bijgewerkt!');
+    }
+
+    public function deleteFaq($id)
+    {
+        $faq = Faq::findOrFail($id);
+        $faq->delete();
+
+        return redirect()->route('admin.dashboard', ['tab' => 'faq'])
+            ->with('success', 'FAQ is verwijderd!');
     }
 }

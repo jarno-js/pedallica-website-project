@@ -8,6 +8,8 @@
 </head>
 <body class="bg-gray-50">
 
+@include('layouts.sponsor-bar')
+
 @include('layouts.navigation')
 
 <!-- Main Content -->

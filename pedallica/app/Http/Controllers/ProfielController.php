@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,6 +21,15 @@ class ProfielController extends Controller
     }
 
     /**
+     * Toon publiek profiel van een gebruiker (voor iedereen zichtbaar)
+     */
+    public function showPublic($username)
+    {
+        $user = User::where('username', $username)->where('approved', true)->firstOrFail();
+        return view('profiel-public', compact('user'));
+    }
+
+    /**
      * Update het profiel van de gebruiker
      */
     public function update(Request $request)
@@ -29,7 +39,9 @@ class ProfielController extends Controller
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id), 'regex:/^[a-zA-Z0-9_]+$/'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'about_me' => ['nullable', 'string', 'max:500'],
             'phone' => ['nullable', 'string', 'max:20'],
             'street' => ['nullable', 'string', 'max:255'],
             'house_number' => ['nullable', 'string', 'max:10'],
@@ -93,11 +105,11 @@ class ProfielController extends Controller
 
         // Upload nieuwe foto met user ID
         $extension = $request->file('profile_picture')->getClientOriginalExtension();
-        $filename = 'user-' . $user->id . '.' . $extension;
-        $request->file('profile_picture')->move(public_path('uploads/profile_pictures'), $filename);
+        $filename = 'lid-' . $user->id . '.' . $extension;
+        $request->file('profile_picture')->move(public_path('uploads/leden/profielfoto'), $filename);
 
         $user->update([
-            'profile_picture' => 'uploads/profile_pictures/' . $filename,
+            'profile_picture' => 'uploads/leden/profielfoto/' . $filename,
         ]);
 
         return redirect()->route('profiel')->with('success', 'Je profielfoto is succesvol bijgewerkt!');
