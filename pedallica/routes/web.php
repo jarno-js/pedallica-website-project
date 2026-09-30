@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomepageController;
-use App\Http\Controllers\SponsorsController;
-use App\Http\Controllers\PloegenController;
-use App\Http\Controllers\EvenementenController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
@@ -14,10 +11,6 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 
 Route::get('/', [HomepageController::class, 'index'])->name('home');
-Route::get('/fotos-sponsors', [SponsorsController::class, 'index'])->name('fotos-sponsors');
-Route::get('/fotos-ploegen', [PloegenController::class, 'index'])->name('fotos-ploegen');
-Route::get('/fotos-ploegen/{slug}', [PloegenController::class, 'show'])->name('fotos-ploegen.show');
-Route::get('/evenementen', [EvenementenController::class, 'index'])->name('evenementen');
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
@@ -34,6 +27,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Dashboard Route (alleen toegankelijk voor ingelogde gebruikers die goedgekeurd zijn)
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['auth', 'approved']);
+
+// Rit aanwezigheid (alleen voor goedgekeurde leden)
+Route::post('/ritten/{rit}/aanwezigheid', [DashboardController::class, 'setAanwezigheid'])
+    ->name('ritten.aanwezigheid')
+    ->middleware(['auth', 'approved']);
 
 // Profiel Routes (alleen toegankelijk voor ingelogde gebruikers)
 Route::middleware('auth')->group(function () {

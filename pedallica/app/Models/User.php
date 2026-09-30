@@ -67,6 +67,6 @@ class User extends Authenticatable
      */
     public function ritten()
     {
-        return $this->belongsToMany(Rit::class)->withTimestamps();
+        return $this->belongsToMany(Rit::class)->withPivot('status')->withTimestamps();
     }
 }

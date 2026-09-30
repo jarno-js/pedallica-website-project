@@ -7,34 +7,33 @@
     </div>
 
     @if($sponsors->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             @foreach($sponsors as $sponsor)
-                <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex flex-col items-center">
                         @if($sponsor->logo)
-                            <img src="{{ asset($sponsor->logo) }}" alt="{{ $sponsor->name }}"
-                                 class="w-32 h-32 object-contain mb-4" onerror="this.src='{{ asset('placeholder.png') }}'">
+                            <img src="{{ asset($sponsor->logo) }}" alt="Sponsor"
+                                 class="w-full h-24 object-contain mb-4">
                         @else
-                            <div class="w-32 h-32 bg-gray-200 flex items-center justify-center mb-4 rounded">
+                            <div class="w-full h-24 bg-gray-200 flex items-center justify-center mb-4 rounded">
                                 <span class="text-gray-400 text-xs text-center">Geen logo</span>
                             </div>
                         @endif
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $sponsor->name }}</h3>
                         @if($sponsor->website)
                             <a href="{{ $sponsor->website }}" target="_blank"
-                               class="text-sm text-blue-600 hover:text-blue-800 mb-4">
-                                Website bezoeken
+                               class="text-xs text-blue-600 hover:text-blue-800 mb-2 truncate max-w-full">
+                                {{ $sponsor->website }}
                             </a>
                         @endif
-                        <div class="flex gap-2 mt-4">
-                            <button onclick='editSponsor({{ $sponsor->id }}, "{{ addslashes($sponsor->name) }}", "{{ $sponsor->website ?? "" }}")'
-                                    class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm">
+                        <div class="flex gap-2 mt-2">
+                            <button onclick='editSponsor({{ $sponsor->id }}, "{{ $sponsor->website ?? "" }}")'
+                                    class="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-xs">
                                 Bewerken
                             </button>
                             <form action="{{ route('admin.sponsors.delete', $sponsor->id) }}" method="POST" class="inline" onsubmit="return confirm('Weet je zeker dat je deze sponsor wilt verwijderen?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm">
+                                <button type="submit" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-xs">
                                     Verwijderen
                                 </button>
                             </form>
@@ -56,7 +55,7 @@
 
 <!-- Sponsor Modal -->
 <div id="sponsorModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+    <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-2xl font-bold text-gray-900" id="sponsorModalTitle">Sponsor Toevoegen</h3>
             <button onclick="closeSponsorModal()" class="text-gray-400 hover:text-gray-600">
@@ -68,12 +67,8 @@
         <form id="sponsorForm" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="_method" id="sponsorMethod" value="POST">
+            <input type="hidden" name="name" id="sponsor_name" value="Sponsor">
             <div class="space-y-4">
-                <div>
-                    <label for="sponsor_name" class="block text-sm font-medium text-gray-700 mb-1">Naam</label>
-                    <input type="text" name="name" id="sponsor_name" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-                </div>
                 <div>
                     <label for="sponsor_logo" class="block text-sm font-medium text-gray-700 mb-1">Logo</label>
                     <input type="file" name="logo" id="sponsor_logo" accept="image/*"
@@ -81,7 +76,7 @@
                     <p class="text-xs text-gray-500 mt-1" id="logoHelp">Upload een afbeelding (max 2MB)</p>
                 </div>
                 <div>
-                    <label for="sponsor_website" class="block text-sm font-medium text-gray-700 mb-1">Website (optioneel)</label>
+                    <label for="sponsor_website" class="block text-sm font-medium text-gray-700 mb-1">Website link</label>
                     <input type="url" name="website" id="sponsor_website"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                            placeholder="https://www.example.com">
@@ -106,7 +101,7 @@ function openSponsorModal() {
     document.getElementById('sponsorModalTitle').textContent = 'Sponsor Toevoegen';
     document.getElementById('sponsorForm').action = "{{ route('admin.sponsors.store') }}";
     document.getElementById('sponsorMethod').value = 'POST';
-    document.getElementById('sponsor_name').value = '';
+    document.getElementById('sponsor_name').value = 'Sponsor-' + Date.now();
     document.getElementById('sponsor_logo').value = '';
     document.getElementById('sponsor_logo').required = true;
     document.getElementById('logoHelp').textContent = 'Upload een afbeelding (max 2MB)';
@@ -114,11 +109,11 @@ function openSponsorModal() {
     document.getElementById('sponsorModal').classList.remove('hidden');
 }
 
-function editSponsor(id, name, website) {
+function editSponsor(id, website) {
     document.getElementById('sponsorModalTitle').textContent = 'Sponsor Bewerken';
     document.getElementById('sponsorForm').action = `/admin/sponsors/${id}`;
     document.getElementById('sponsorMethod').value = 'PUT';
-    document.getElementById('sponsor_name').value = name;
+    document.getElementById('sponsor_name').value = 'Sponsor-' + id;
     document.getElementById('sponsor_logo').required = false;
     document.getElementById('logoHelp').textContent = 'Laat leeg om huidige logo te behouden';
     document.getElementById('sponsor_website').value = website || '';

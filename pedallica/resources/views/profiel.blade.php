@@ -3,321 +3,376 @@
 @section('title', 'Mijn Profiel - Pedallica')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-        <!-- Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Mijn Profiel</h1>
-            <p class="mt-2 text-gray-600">Bekijk en wijzig je persoonlijke gegevens</p>
+<style>
+    :root {
+        --bg: #0b0b0d;
+        --bg2: #111114;
+        --card: #16161a;
+        --text: #e8e8ea;
+        --muted: #b9b9c0;
+        --accent: #f97316;
+        --ring: rgba(255,255,255,.08);
+    }
+    body { background: var(--bg) !important; color: var(--text); font-family: Inter, system-ui, sans-serif; }
+    .font-head { font-family: "Bebas Neue", system-ui, sans-serif; letter-spacing: .5px; }
+
+    .page-wrap {
+        min-height: 100vh;
+        background: var(--bg);
+        padding: 2.5rem 1rem;
+    }
+    .inner { max-width: 900px; margin: 0 auto; }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--ring);
+        border-radius: 1rem;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+    .card-header {
+        background: var(--accent);
+        padding: .85rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .card-header h2 {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.2rem;
+        letter-spacing: .06em;
+        color: #fff;
+        margin: 0;
+    }
+    .card-body { padding: 1.75rem; }
+
+    .auth-label {
+        display: block;
+        font-size: .78rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        margin-bottom: .4rem;
+    }
+    .auth-input, .auth-textarea {
+        width: 100%;
+        background: var(--bg2);
+        border: 1px solid var(--ring);
+        color: var(--text);
+        padding: .65rem 1rem;
+        border-radius: .5rem;
+        font-size: .95rem;
+        font-family: Inter, sans-serif;
+        transition: border-color .2s;
+        outline: none;
+        box-sizing: border-box;
+    }
+    .auth-input:focus, .auth-textarea:focus { border-color: var(--accent); }
+    .auth-input.error, .auth-textarea.error { border-color: #ef4444; }
+    .auth-input::placeholder, .auth-textarea::placeholder { color: var(--muted); }
+    .auth-textarea { resize: vertical; }
+    .field-error { color: #f87171; font-size: .8rem; margin-top: .3rem; }
+    .field-hint { color: var(--muted); font-size: .78rem; margin-top: .3rem; }
+
+    .btn-primary {
+        background: var(--accent);
+        color: #fff;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.05rem;
+        letter-spacing: .08em;
+        padding: .65rem 1.75rem;
+        border: none;
+        border-radius: .5rem;
+        cursor: pointer;
+        transition: background .2s, transform .1s;
+    }
+    .btn-primary:hover { background: #ea6b0b; }
+    .btn-primary:active { transform: scale(.98); }
+
+    .btn-danger {
+        background: rgba(239,68,68,.15);
+        color: #f87171;
+        border: 1px solid rgba(239,68,68,.3);
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.05rem;
+        letter-spacing: .08em;
+        padding: .65rem 1.75rem;
+        border-radius: .5rem;
+        cursor: pointer;
+        transition: background .2s;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,.25); }
+
+    .alert-success {
+        background: rgba(34,197,94,.1);
+        border: 1px solid rgba(34,197,94,.25);
+        color: #86efac;
+        padding: .75rem 1rem;
+        border-radius: .5rem;
+        font-size: .9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .section-sep {
+        border: none;
+        border-top: 1px solid var(--ring);
+        margin: 1.5rem 0 1.25rem;
+    }
+    .section-label {
+        font-size: .72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .1em;
+        color: var(--accent);
+        margin-bottom: 1rem;
+    }
+
+    /* Profielfoto */
+    .avatar-wrap {
+        width: 6rem;
+        height: 6rem;
+        border-radius: 50%;
+        border: 3px solid var(--accent);
+        overflow: hidden;
+        flex-shrink: 0;
+        background: var(--bg2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+    .file-input-label {
+        display: inline-block;
+        background: var(--bg2);
+        border: 1px solid var(--ring);
+        color: var(--muted);
+        padding: .5rem 1rem;
+        border-radius: .5rem;
+        font-size: .85rem;
+        cursor: pointer;
+        transition: border-color .2s, color .2s;
+    }
+    .file-input-label:hover { border-color: var(--accent); color: var(--text); }
+    input[type="file"] { display: none; }
+</style>
+
+<div class="page-wrap">
+    <div class="inner">
+
+        {{-- Paginatitel --}}
+        <div style="margin-bottom:1.75rem;">
+            <h1 class="font-head" style="font-size:2rem; color:var(--text); margin:0 0 .25rem;">Mijn Profiel</h1>
+            <p style="color:var(--muted); font-size:.9rem; margin:0;">Bekijk en wijzig je persoonlijke gegevens</p>
         </div>
 
-        <!-- Success Message -->
         @if(session('success'))
-            <x-alert type="success" class="mb-6">
-                {{ session('success') }}
-            </x-alert>
+            <div class="alert-success">{{ session('success') }}</div>
         @endif
 
-        <!-- Profielfoto -->
-        <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
-            <div class="bg-orange-500 px-6 py-4">
-                <h2 class="text-xl font-semibold text-white">Profielfoto</h2>
+        {{-- Profielfoto --}}
+        <div class="card">
+            <div class="card-header">
+                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <h2>Profielfoto</h2>
             </div>
-
-            <div class="p-6">
-                <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
-                    <!-- Huidige Foto -->
-                    <div class="flex-shrink-0">
+            <div class="card-body">
+                <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+                    <div class="avatar-wrap">
                         @if($user->profile_picture)
-                            <img src="{{ asset($user->profile_picture) }}" alt="Profielfoto"
-                                 class="w-32 h-32 rounded-full object-cover border-4 border-orange-500">
+                            <img src="{{ asset($user->profile_picture) }}" alt="Profielfoto">
                         @else
-                            <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
-                                <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                            </div>
+                            <svg width="36" height="36" fill="none" stroke="#b9b9c0" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
                         @endif
                     </div>
 
-                    <!-- Upload Form -->
-                    <div class="flex-grow">
-                        <form method="POST" action="{{ route('profiel.picture') }}" enctype="multipart/form-data" class="space-y-4">
-                            @csrf
-                            @method('PUT')
-
-                            <div>
-                                <label for="profile_picture" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Nieuwe profielfoto uploaden
-                                </label>
-                                <input type="file" id="profile_picture" name="profile_picture" accept="image/*" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('profile_picture') border-red-500 @enderror">
-                                @error('profile_picture')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                                <p class="mt-1 text-sm text-gray-500">JPG, PNG of GIF. Maximaal 2MB.</p>
-                            </div>
-
-                            <div class="flex gap-3">
-                                <button type="submit" class="px-4 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
-                                    Foto Uploaden
+                    <form method="POST" action="{{ route('profiel.picture') }}" enctype="multipart/form-data" style="flex:1; min-width:220px;">
+                        @csrf
+                        @method('PUT')
+                        <div style="margin-bottom:1rem;">
+                            <label for="profile_picture" class="file-input-label">Nieuwe foto kiezen</label>
+                            <input type="file" name="profile_picture" id="profile_picture" accept="image/*" required>
+                            @error('profile_picture')
+                                <p class="field-error">{{ $message }}</p>
+                            @enderror
+                            <p class="field-hint">JPG, PNG of GIF — max. 2MB</p>
+                        </div>
+                        <div style="display:flex; gap:.75rem; flex-wrap:wrap;">
+                            <button type="submit" class="btn-primary">Foto Uploaden</button>
+                            @if($user->profile_picture)
+                                <button type="button" class="btn-danger"
+                                    onclick="document.getElementById('delete-picture-form').submit();">
+                                    Foto Verwijderen
                                 </button>
+                            @endif
+                        </div>
+                    </form>
 
-                                @if($user->profile_picture)
-                                    <button type="button" onclick="event.preventDefault(); document.getElementById('delete-picture-form').submit();"
-                                            class="px-4 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition-colors">
-                                        Foto Verwijderen
-                                    </button>
-                                @endif
-                            </div>
+                    @if($user->profile_picture)
+                        <form id="delete-picture-form" method="POST" action="{{ route('profiel.picture.delete') }}" style="display:none;">
+                            @csrf
+                            @method('DELETE')
                         </form>
-
-                        @if($user->profile_picture)
-                            <form id="delete-picture-form" method="POST" action="{{ route('profiel.picture.delete') }}" class="hidden">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        @endif
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
 
-        <!-- Profiel Informatie -->
-        <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
-            <div class="bg-orange-500 px-6 py-4">
-                <h2 class="text-xl font-semibold text-white">Persoonlijke Gegevens</h2>
+        {{-- Persoonlijke gegevens --}}
+        <div class="card">
+            <div class="card-header">
+                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <h2>Persoonlijke Gegevens</h2>
             </div>
+            <div class="card-body">
+                <form method="POST" action="{{ route('profiel.update') }}">
+                    @csrf
+                    @method('PUT')
 
-            <form method="POST" action="{{ route('profiel.update') }}" class="p-6">
-                @csrf
-                @method('PUT')
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Voornaam -->
-                    <div>
-                        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">Voornaam *</label>
-                        <input type="text" id="first_name" name="first_name" value="{{ old('first_name', $user->first_name) }}" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('first_name') border-red-500 @enderror">
-                        @error('first_name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Achternaam -->
-                    <div>
-                        <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Achternaam *</label>
-                        <input type="text" id="last_name" name="last_name" value="{{ old('last_name', $user->last_name) }}" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('last_name') border-red-500 @enderror">
-                        @error('last_name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Username -->
-                    <div>
-                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Gebruikersnaam *</label>
-                        <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('username') border-red-500 @enderror">
-                        @error('username')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                        <p class="mt-1 text-xs text-gray-500">Deze naam wordt op je profiel getoond</p>
-                    </div>
-
-                    <!-- Email -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">E-mailadres *</label>
-                        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('email') border-red-500 @enderror">
-                        @error('email')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Telefoon -->
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Telefoonnummer</label>
-                        <input type="text" id="phone" name="phone" value="{{ old('phone', $user->phone) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('phone') border-red-500 @enderror">
-                        @error('phone')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Geboortedatum -->
-                    <div>
-                        <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-2">Geboortedatum</label>
-                        <input type="text" id="birth_date" name="birth_date" value="{{ old('birth_date', $user->birth_date ? $user->birth_date->format('d/m/Y') : '') }}" placeholder="dd/mm/jjjj"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('birth_date') border-red-500 @enderror">
-                        @error('birth_date')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Over mij sectie -->
-                <div class="mt-6">
-                    <label for="about_me" class="block text-sm font-medium text-gray-700 mb-2">Over mij</label>
-                    <textarea id="about_me" name="about_me" rows="4" maxlength="500" placeholder="Vertel iets over jezelf..."
-                              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('about_me') border-red-500 @enderror">{{ old('about_me', $user->about_me) }}</textarea>
-                    @error('about_me')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                    <p class="mt-1 text-xs text-gray-500">Maximaal 500 karakters</p>
-                </div>
-
-                <!-- Adres sectie -->
-                <div class="mt-8 pt-6 border-t border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Adresgegevens</h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Straat -->
+                    <div class="grid-2" style="margin-bottom:1.25rem;">
                         <div>
-                            <label for="street" class="block text-sm font-medium text-gray-700 mb-2">Straat</label>
-                            <input type="text" id="street" name="street" value="{{ old('street', $user->street) }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('street') border-red-500 @enderror">
-                            @error('street')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <label for="first_name" class="auth-label">Voornaam <span style="color:var(--accent)">*</span></label>
+                            <input type="text" id="first_name" name="first_name" value="{{ old('first_name', $user->first_name) }}" required class="auth-input @error('first_name') error @enderror">
+                            @error('first_name') <p class="field-error">{{ $message }}</p> @enderror
                         </div>
-
-                        <!-- Huisnummer -->
                         <div>
-                            <label for="house_number" class="block text-sm font-medium text-gray-700 mb-2">Huisnummer</label>
-                            <input type="text" id="house_number" name="house_number" value="{{ old('house_number', $user->house_number) }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('house_number') border-red-500 @enderror">
-                            @error('house_number')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Postcode -->
-                        <div>
-                            <label for="postal_code" class="block text-sm font-medium text-gray-700 mb-2">Postcode</label>
-                            <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code', $user->postal_code) }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('postal_code') border-red-500 @enderror">
-                            @error('postal_code')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Stad -->
-                        <div>
-                            <label for="city" class="block text-sm font-medium text-gray-700 mb-2">Stad</label>
-                            <input type="text" id="city" name="city" value="{{ old('city', $user->city) }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('city') border-red-500 @enderror">
-                            @error('city')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <label for="last_name" class="auth-label">Achternaam <span style="color:var(--accent)">*</span></label>
+                            <input type="text" id="last_name" name="last_name" value="{{ old('last_name', $user->last_name) }}" required class="auth-input @error('last_name') error @enderror">
+                            @error('last_name') <p class="field-error">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                </div>
 
-                <!-- Submit Button -->
-                <div class="mt-6 flex justify-end">
-                    <button type="submit" class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
-                        Gegevens Opslaan
-                    </button>
-                </div>
-            </form>
+                    <div class="grid-2" style="margin-bottom:1.25rem;">
+                        <div>
+                            <label for="username" class="auth-label">Gebruikersnaam <span style="color:var(--accent)">*</span></label>
+                            <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" required class="auth-input @error('username') error @enderror">
+                            @error('username') <p class="field-error">{{ $message }}</p> @enderror
+                            <p class="field-hint">Zichtbaar op je profiel</p>
+                        </div>
+                        <div>
+                            <label for="email" class="auth-label">E-mailadres <span style="color:var(--accent)">*</span></label>
+                            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required class="auth-input @error('email') error @enderror">
+                            @error('email') <p class="field-error">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="margin-bottom:1.25rem;">
+                        <div>
+                            <label for="phone" class="auth-label">Telefoonnummer</label>
+                            <input type="text" id="phone" name="phone" value="{{ old('phone', $user->phone) }}" class="auth-input @error('phone') error @enderror">
+                            @error('phone') <p class="field-error">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label for="birth_date" class="auth-label">Geboortedatum</label>
+                            <input type="text" id="birth_date" name="birth_date" value="{{ old('birth_date', $user->birth_date ? $user->birth_date->format('d/m/Y') : '') }}" placeholder="dd/mm/jjjj" class="auth-input @error('birth_date') error @enderror">
+                            @error('birth_date') <p class="field-error">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:1.25rem;">
+                        <label for="about_me" class="auth-label">Over mij</label>
+                        <textarea id="about_me" name="about_me" rows="4" maxlength="500" placeholder="Vertel iets over jezelf..." class="auth-textarea @error('about_me') error @enderror">{{ old('about_me', $user->about_me) }}</textarea>
+                        @error('about_me') <p class="field-error">{{ $message }}</p> @enderror
+                        <p class="field-hint">Maximaal 500 karakters</p>
+                    </div>
+
+                    <hr class="section-sep">
+                    <p class="section-label">Adresgegevens</p>
+
+                    <div class="grid-2" style="margin-bottom:1.25rem;">
+                        <div>
+                            <label for="street" class="auth-label">Straat</label>
+                            <input type="text" id="street" name="street" value="{{ old('street', $user->street) }}" class="auth-input @error('street') error @enderror">
+                            @error('street') <p class="field-error">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label for="house_number" class="auth-label">Huisnummer</label>
+                            <input type="text" id="house_number" name="house_number" value="{{ old('house_number', $user->house_number) }}" class="auth-input @error('house_number') error @enderror">
+                            @error('house_number') <p class="field-error">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="margin-bottom:1.5rem;">
+                        <div>
+                            <label for="postal_code" class="auth-label">Postcode</label>
+                            <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code', $user->postal_code) }}" class="auth-input @error('postal_code') error @enderror">
+                            @error('postal_code') <p class="field-error">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label for="city" class="auth-label">Stad</label>
+                            <input type="text" id="city" name="city" value="{{ old('city', $user->city) }}" class="auth-input @error('city') error @enderror">
+                            @error('city') <p class="field-error">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn-primary">Gegevens Opslaan</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <!-- Wachtwoord Wijzigen -->
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="bg-orange-500 px-6 py-4">
-                <h2 class="text-xl font-semibold text-white">Wachtwoord Wijzigen</h2>
+        {{-- Wachtwoord wijzigen --}}
+        <div class="card">
+            <div class="card-header">
+                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                <h2>Wachtwoord Wijzigen</h2>
             </div>
+            <div class="card-body">
+                <form method="POST" action="{{ route('profiel.password') }}" style="max-width:440px;">
+                    @csrf
+                    @method('PUT')
 
-            <form method="POST" action="{{ route('profiel.password') }}" class="p-6">
-                @csrf
-                @method('PUT')
-
-                <div class="grid grid-cols-1 gap-6 max-w-md">
-                    <!-- Huidig Wachtwoord -->
-                    <div>
-                        <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Huidig Wachtwoord *</label>
-                        <input type="password" id="current_password" name="current_password" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('current_password') border-red-500 @enderror">
-                        @error('current_password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                    <div style="margin-bottom:1.25rem;">
+                        <label for="current_password" class="auth-label">Huidig wachtwoord <span style="color:var(--accent)">*</span></label>
+                        <input type="password" id="current_password" name="current_password" required class="auth-input @error('current_password') error @enderror" placeholder="••••••••">
+                        @error('current_password') <p class="field-error">{{ $message }}</p> @enderror
                     </div>
 
-                    <!-- Nieuw Wachtwoord -->
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Nieuw Wachtwoord *</label>
-                        <input type="password" id="password" name="password" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('password') border-red-500 @enderror">
-                        @error('password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                        <p class="mt-1 text-sm text-gray-500">Minimaal 8 karakters</p>
+                    <div style="margin-bottom:1.25rem;">
+                        <label for="password" class="auth-label">Nieuw wachtwoord <span style="color:var(--accent)">*</span></label>
+                        <input type="password" id="password" name="password" required class="auth-input @error('password') error @enderror" placeholder="••••••••">
+                        @error('password') <p class="field-error">{{ $message }}</p> @enderror
+                        <p class="field-hint">Minimaal 8 karakters</p>
                     </div>
 
-                    <!-- Bevestig Nieuw Wachtwoord -->
-                    <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Bevestig Nieuw Wachtwoord *</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                    <div style="margin-bottom:1.5rem;">
+                        <label for="password_confirmation" class="auth-label">Bevestig nieuw wachtwoord <span style="color:var(--accent)">*</span></label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" required class="auth-input" placeholder="••••••••">
                     </div>
-                </div>
 
-                <!-- Submit Button -->
-                <div class="mt-6 flex justify-end">
-                    <button type="submit" class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
-                        Wachtwoord Wijzigen
-                    </button>
-                </div>
-            </form>
+                    <div style="display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn-primary">Wachtwoord Wijzigen</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
     </div>
 </div>
 
 <script>
-    // Datum input formatter (dd/mm/yyyy)
     const birthDateInput = document.getElementById('birth_date');
     if (birthDateInput) {
         birthDateInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.slice(0, 2) + '/' + value.slice(2);
-            }
-            if (value.length >= 5) {
-                value = value.slice(0, 5) + '/' + value.slice(5, 9);
-            }
+            if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2);
+            if (value.length >= 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
             e.target.value = value;
-        });
-    }
-
-    // Validatie bij submit van profiel formulier
-    const profielForm = document.querySelector('form[action="{{ route('profiel.update') }}"]');
-    if (profielForm) {
-        profielForm.addEventListener('submit', function(e) {
-            const dateValue = birthDateInput.value;
-            if (dateValue) {
-                const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-                const match = dateValue.match(datePattern);
-
-                if (!match) {
-                    e.preventDefault();
-                    alert('Voer een geldige datum in (dd/mm/jjjj)');
-                    return false;
-                }
-
-                const day = parseInt(match[1]);
-                const month = parseInt(match[2]);
-                const year = parseInt(match[3]);
-
-                if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900 || year > new Date().getFullYear()) {
-                    e.preventDefault();
-                    alert('Voer een geldige datum in');
-                    return false;
-                }
-            }
         });
     }
 </script>

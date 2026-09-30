@@ -34,7 +34,7 @@ class AdminDashboardController extends Controller
         $ritten = Rit::with('ploeg')->orderBy('date', 'desc')->get();
 
         // Haal alle ploegen op voor dropdown (in logische volgorde)
-        $ploegen = Ploeg::orderByRaw("FIELD(slug, 'pedallica-a', 'pedallica-b', 'pedallica-c', 'mtb', 'pedallicava')")->get();
+        $ploegen = Ploeg::orderByRaw("FIELD(slug, 'pedallica-a', 'pedallica-b', 'pedallica-c', 'mtb', 'pedallicava', 'ploegen-rit')")->get();
 
         // Haal alle FAQ categorieën en FAQs op
         $faqCategories = FaqCategory::with('faqs')->ordered()->get();
@@ -85,6 +85,7 @@ class AdminDashboardController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'logo' => 'required|image|mimes:jpeg,jpg,png,gif,svg|max:2048',
             'website' => 'nullable|url',
         ]);
@@ -92,6 +93,7 @@ class AdminDashboardController extends Controller
         // Create sponsor first to get ID
         $sponsor = Sponsor::create([
             'name' => $request->name,
+            'description' => $request->description,
             'website' => $request->website,
         ]);
 
@@ -111,6 +113,7 @@ class AdminDashboardController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:2048',
             'website' => 'nullable|url',
         ]);
@@ -119,6 +122,7 @@ class AdminDashboardController extends Controller
 
         $data = [
             'name' => $request->name,
+            'description' => $request->description,
             'website' => $request->website,
         ];
 
@@ -194,7 +198,7 @@ class AdminDashboardController extends Controller
         // Check if event has passed
         $event->checkIfPassed();
 
-        return redirect()->route('admin.dashboard', ['tab' => 'evenementen'])
+        return redirect()->route('admin.dashboard', ['tab' => 'kalender'])
             ->with('success', 'Evenement is toegevoegd!');
     }
 
@@ -243,7 +247,7 @@ class AdminDashboardController extends Controller
         // Check if event has passed
         $event->checkIfPassed();
 
-        return redirect()->route('admin.dashboard', ['tab' => 'evenementen'])
+        return redirect()->route('admin.dashboard', ['tab' => 'kalender'])
             ->with('success', 'Evenement is bijgewerkt!');
     }
 
@@ -258,7 +262,7 @@ class AdminDashboardController extends Controller
 
         $event->delete();
 
-        return redirect()->route('admin.dashboard', ['tab' => 'evenementen'])
+        return redirect()->route('admin.dashboard', ['tab' => 'kalender'])
             ->with('success', 'Evenement is verwijderd!');
     }
 

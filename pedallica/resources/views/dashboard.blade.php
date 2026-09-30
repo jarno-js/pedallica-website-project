@@ -1,406 +1,574 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard - Pedallica')
+@section('title', 'Ritten - Pedallica')
 
 @section('content')
-<div class="min-h-screen bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<style>
+    .ritten-page {
+        background: #0b0b0d;
+        min-height: 100vh;
+        font-family: Inter, system-ui, -apple-system, sans-serif;
+    }
+    .ritten-page .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px;
+    }
+    .ritten-header {
+        margin-bottom: 40px;
+    }
+    .ritten-header h1 {
+        font-family: "Bebas Neue", system-ui, sans-serif;
+        font-size: 42px;
+        color: white;
+        margin: 0 0 8px;
+    }
+    .ritten-header .underline {
+        width: 60px;
+        height: 3px;
+        background: #f97316;
+        margin-bottom: 12px;
+    }
+    .ritten-header p {
+        color: #b9b9c0;
+        font-size: 14px;
+    }
 
+    /* Tabs */
+    .ploeg-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    .ploeg-tab {
+        padding: 10px 20px;
+        background: #16161a;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 8px;
+        color: #b9b9c0;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .ploeg-tab:hover {
+        background: #1f1f24;
+        color: white;
+    }
+    .ploeg-tab.active {
+        background: #f97316;
+        color: #111;
+        border-color: #f97316;
+    }
+
+    /* Search */
+    .search-bar {
+        position: relative;
+        margin-bottom: 30px;
+    }
+    .search-bar input {
+        width: 100%;
+        max-width: 400px;
+        padding: 12px 16px 12px 44px;
+        background: #16161a;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 10px;
+        color: white;
+        font-size: 14px;
+    }
+    .search-bar input::placeholder {
+        color: #666;
+    }
+    .search-bar input:focus {
+        outline: none;
+        border-color: #f97316;
+    }
+    .search-bar svg {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        color: #666;
+    }
+
+    /* Ploeg info */
+    .ploeg-info {
+        margin-bottom: 30px;
+    }
+    .ploeg-info h2 {
+        font-family: "Bebas Neue", system-ui, sans-serif;
+        font-size: 32px;
+        color: white;
+        margin: 0 0 8px;
+    }
+    .ploeg-info p {
+        color: #b9b9c0;
+        font-size: 14px;
+        margin: 0;
+    }
+
+    /* Ritten grid */
+    .ritten-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+
+    /* Rit card */
+    .rit-card {
+        background: #16161a;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: all 0.2s;
+    }
+    .rit-card:hover {
+        border-color: rgba(255,255,255,0.15);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .rit-card-content {
+        padding: 20px;
+    }
+    .rit-card h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+        margin: 0 0 8px;
+    }
+    .rit-card .description {
+        font-size: 13px;
+        color: #b9b9c0;
+        margin-bottom: 16px;
+    }
+    .rit-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .rit-detail {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: #b9b9c0;
+    }
+    .rit-detail svg {
+        width: 16px;
+        height: 16px;
+        color: #f97316;
+        flex-shrink: 0;
+    }
+    .rit-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .rit-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .rit-btn.primary {
+        background: #f97316;
+        color: #111;
+    }
+    .rit-btn.primary:hover {
+        background: #ea580c;
+    }
+    .rit-btn.secondary {
+        background: rgba(255,255,255,0.1);
+        color: white;
+    }
+    .rit-btn.secondary:hover {
+        background: rgba(255,255,255,0.15);
+    }
+    .rit-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Aanwezigheid */
+    .aanwezigheid-sectie {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .aanwezigheid-tellers {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 10px;
+        font-size: 12px;
+        color: #888;
+    }
+    .aanwezigheid-teller {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .aanwezigheid-teller .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+    }
+    .dot-aanwezig { background: #22c55e; }
+    .dot-twijfel  { background: #eab308; }
+    .aanwezigheid-knoppen {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .aanwezigheid-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: rgba(255,255,255,0.07);
+        color: #aaa;
+    }
+    .aanwezigheid-btn:hover {
+        background: rgba(255,255,255,0.12);
+        color: white;
+    }
+    .aanwezigheid-btn.actief-aanwezig {
+        background: rgba(34, 197, 94, 0.15);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+    .aanwezigheid-btn.actief-twijfel {
+        background: rgba(234, 179, 8, 0.15);
+        color: #eab308;
+        border: 1px solid rgba(234, 179, 8, 0.35);
+    }
+    .aanwezigheid-btn.actief-afwezig {
+        background: rgba(239, 68, 68, 0.12);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Oogje naast tellers */
+    .deelnemers-oog-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        color: #555;
+        transition: color 0.15s;
+        margin-left: 2px;
+    }
+    .deelnemers-oog-btn:hover { color: #f97316; }
+    .deelnemers-oog-btn svg { width: 15px; height: 15px; }
+
+    /* Deelnemers popup overlay */
+    .deelnemers-popup-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+    .deelnemers-popup-overlay.open {
+        display: flex;
+    }
+    .deelnemers-popup {
+        background: #1c1c21;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        width: 100%;
+        max-width: 380px;
+        max-height: 80vh;
+        overflow-y: auto;
+        margin: 20px;
+    }
+    .deelnemers-popup-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px 14px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        position: sticky;
+        top: 0;
+        background: #1c1c21;
+    }
+    .deelnemers-popup-header h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+    }
+    .deelnemers-popup-sluit {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #666;
+        padding: 0;
+        display: flex;
+        transition: color 0.15s;
+    }
+    .deelnemers-popup-sluit:hover { color: white; }
+    .deelnemers-popup-sluit svg { width: 20px; height: 20px; }
+    .deelnemers-popup-groep {
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .deelnemers-popup-groep:last-child { border-bottom: none; }
+    .deelnemers-popup-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 10px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .deelnemers-popup-label.groen { color: #22c55e; }
+    .deelnemers-popup-label.geel  { color: #eab308; }
+    .deelnemers-popup-persoon {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 0;
+        text-decoration: none;
+        color: #ccc;
+        font-size: 14px;
+        border-radius: 8px;
+        transition: color 0.15s;
+    }
+    .deelnemers-popup-persoon:hover { color: white; }
+    .deelnemers-popup-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+    .deelnemers-popup-initialen {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #2a2a30;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #888;
+        flex-shrink: 0;
+    }
+
+    /* Evening ride indicator */
+    .evening-indicator {
+        background: linear-gradient(to right, #f97316, #ea580c);
+        padding: 8px 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+    }
+
+    /* Sectie headers */
+    .ritten-section-header {
+        margin-bottom: 16px;
+    }
+    .ritten-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .ritten-badge.upcoming {
+        background: rgba(249, 115, 22, 0.15);
+        color: #f97316;
+        border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+    .ritten-badge.passed {
+        background: rgba(255,255,255,0.05);
+        color: #666;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Gepasseerde kaarten */
+    .rit-card--passed {
+        opacity: 0.5;
+    }
+    .rit-card--passed:hover {
+        opacity: 0.7;
+        transform: none;
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    .empty-state svg {
+        width: 64px;
+        height: 64px;
+        color: #444;
+        margin-bottom: 16px;
+    }
+    .empty-state p {
+        color: #666;
+        font-size: 16px;
+    }
+
+    @media (max-width: 768px) {
+        .ritten-page .container {
+            padding: 20px;
+        }
+        .ritten-header h1 {
+            font-size: 32px;
+        }
+        .ploeg-tabs {
+            gap: 6px;
+        }
+        .ploeg-tab {
+            padding: 8px 14px;
+            font-size: 13px;
+        }
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="ritten-page">
+    <div class="container">
         <!-- Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p class="mt-2 text-gray-600">Welkom terug, {{ Auth::user()->first_name }}!</p>
+        <div class="ritten-header">
+            <h1>Ritten</h1>
+            <div class="underline"></div>
+            <p>Welkom terug, {{ Auth::user()->first_name }}! Bekijk hier alle geplande ritten per ploeg.</p>
         </div>
 
-        <!-- Tab Navigation -->
-        <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
-            <!-- Main Tabs -->
-            <div class="border-b border-gray-200">
-                <nav class="flex -mb-px">
-                    <a href="{{ route('dashboard', ['tab' => 'ritten']) }}"
-                       class="group inline-flex items-center py-4 px-6 border-b-2 font-medium text-sm {{ $tab === 'ritten' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        Ritten
-                    </a>
-                    <a href="{{ route('dashboard', ['tab' => 'leden']) }}"
-                       class="group inline-flex items-center py-4 px-6 border-b-2 font-medium text-sm {{ $tab === 'leden' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                        Leden
-                    </a>
-                    <a href="{{ route('dashboard', ['tab' => 'nieuws']) }}"
-                       class="group inline-flex items-center py-4 px-6 border-b-2 font-medium text-sm {{ $tab === 'nieuws' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
-                        Nieuws
-                    </a>
-                </nav>
-            </div>
+        <!-- Ploeg Tabs -->
+        <div class="ploeg-tabs">
+            @foreach($ploegenVoorAvond as $ploeg)
+                <a href="{{ route('dashboard', ['subtab' => $ploeg->slug]) }}"
+                   class="ploeg-tab {{ $subTab === $ploeg->slug ? 'active' : '' }}">
+                    {{ $ploeg->name }}
+                </a>
+            @endforeach
 
-            <!-- Sub Tabs (alleen voor Ritten) -->
-            @if($tab === 'ritten')
-                <div class="bg-gray-50 border-b border-gray-200">
-                    <nav class="flex -mb-px overflow-x-auto px-2">
-                        @foreach($ploegenVoorAvond as $ploeg)
-                            <a href="{{ route('dashboard', ['tab' => 'ritten', 'subtab' => $ploeg->slug]) }}"
-                               class="inline-flex items-center py-3 px-4 border-b-2 font-medium text-xs whitespace-nowrap {{ $subTab === $ploeg->slug ? 'border-orange-500 text-orange-600 bg-white' : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300' }}">
-                                {{ $ploeg->name }}
-                            </a>
-                        @endforeach
-
-                        @if($avondritten)
-                            <a href="{{ route('dashboard', ['tab' => 'ritten', 'subtab' => $avondritten->slug]) }}"
-                               class="inline-flex items-center py-3 px-4 border-b-2 font-medium text-xs whitespace-nowrap {{ $subTab === $avondritten->slug ? 'border-orange-500 text-orange-600 bg-white' : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300' }}">
-                                {{ $avondritten->name }}
-                            </a>
-                        @endif
-
-                        @foreach($ploegenNaAvond as $ploeg)
-                            <a href="{{ route('dashboard', ['tab' => 'ritten', 'subtab' => $ploeg->slug]) }}"
-                               class="inline-flex items-center py-3 px-4 border-b-2 font-medium text-xs whitespace-nowrap {{ $subTab === $ploeg->slug ? 'border-orange-500 text-orange-600 bg-white' : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300' }}">
-                                {{ $ploeg->name }}
-                            </a>
-                        @endforeach
-                    </nav>
-                </div>
+            @if($avondritten)
+                <a href="{{ route('dashboard', ['subtab' => $avondritten->slug]) }}"
+                   class="ploeg-tab {{ $subTab === $avondritten->slug ? 'active' : '' }}">
+                    {{ $avondritten->name }}
+                </a>
             @endif
 
-            <!-- Tab Content -->
-            <div class="p-6">
-                @php
-                    $currentPloeg = null;
-                    if ($tab === 'ritten') {
-                        $currentPloeg = $allePloegen->where('slug', $subTab)->first();
-                    }
-                @endphp
+            @foreach($ploegenNaAvond as $ploeg)
+                <a href="{{ route('dashboard', ['subtab' => $ploeg->slug]) }}"
+                   class="ploeg-tab {{ $subTab === $ploeg->slug ? 'active' : '' }}">
+                    {{ $ploeg->name }}
+                </a>
+            @endforeach
+        </div>
 
-                @if($tab === 'ritten' && $currentPloeg)
-                    <!-- Ploeg Ritten Tab -->
-                    <div>
-                        <div class="mb-6">
-                            <h2 class="text-3xl font-bold text-gray-900">{{ $currentPloeg->name }}</h2>
-                            @if($currentPloeg->description)
-                                <p class="text-gray-600 mt-2">{{ $currentPloeg->description }}</p>
-                            @endif
-                        </div>
+        @php
+            $currentPloeg = $allePloegen->where('slug', $subTab)->first();
+        @endphp
 
-                        <!-- Zoekbalk voor ritten -->
-                        <div class="mb-6">
-                            <div class="relative">
-                                <input type="text" id="rittenZoekbalk" placeholder="Zoek ritten op naam, locatie, datum..."
-                                       class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                                <svg class="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        @if($currentPloeg->ritten->count() > 0)
-                            <div id="rittenContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                @foreach($currentPloeg->ritten as $rit)
-                                    <div class="bg-white rounded-lg shadow-md border {{ $currentPloeg->is_evening_rides ? 'border-orange-300' : 'border-gray-200' }} overflow-hidden hover:shadow-lg transition-shadow">
-                                        <div class="p-5">
-                                            <div class="flex justify-between items-start mb-3">
-                                                <h3 class="text-lg font-bold text-gray-900">{{ $rit->title }}</h3>
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-
-                                            @if($rit->description)
-                                                <p class="text-sm text-gray-600 mb-4">{{ $rit->description }}</p>
-                                            @endif
-
-                                            <div class="space-y-2 text-sm">
-                                                <div class="flex items-center text-gray-700">
-                                                    <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                    </svg>
-                                                    {{ $rit->date->format('d/m/Y') }}
-                                                </div>
-
-                                                @if($rit->start_time)
-                                                    <div class="flex items-center text-gray-700">
-                                                        <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                        </svg>
-                                                        {{ $rit->start_time }}
-                                                    </div>
-                                                @endif
-
-                                                @if($rit->location)
-                                                    <div class="flex items-center text-gray-700">
-                                                        <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
-                                                        {{ $rit->location }}
-                                                    </div>
-                                                @endif
-
-                                                @if($rit->distance)
-                                                    <div class="flex items-center text-gray-700">
-                                                        <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                                        </svg>
-                                                        {{ $rit->distance }} km
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        @if($currentPloeg->is_evening_rides)
-                                            <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2">
-                                                <p class="text-xs text-white font-semibold">Avondrit</p>
-                                            </div>
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="text-center py-16">
-                                <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <p class="text-gray-500 text-lg">Nog geen ritten gepland voor {{ $currentPloeg->name }}</p>
-                            </div>
-                        @endif
-                    </div>
-
-                @elseif($tab === 'leden')
-                    <!-- Leden Tab -->
-                    <div>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Leden Overzicht</h2>
-
-                        <!-- Zoekbalk voor personen -->
-                        <div class="mb-6">
-                            <div class="relative">
-                                <input type="text" id="ledenZoekbalk" placeholder="Zoek leden op naam, email, telefoon..."
-                                       class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                                <svg class="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Naam</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefoon</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acties</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach($leden as $lid)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
-                                                    @if($lid->profile_picture)
-                                                        <img src="{{ asset($lid->profile_picture) }}" alt="{{ $lid->first_name }}"
-                                                             class="w-10 h-10 rounded-full object-cover mr-3">
-                                                    @else
-                                                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                                                            <span class="text-gray-600 font-semibold">{{ substr($lid->first_name, 0, 1) }}{{ substr($lid->last_name, 0, 1) }}</span>
-                                                        </div>
-                                                    @endif
-                                                    <div>
-                                                        <div class="text-sm font-medium text-gray-900">{{ $lid->first_name }} {{ $lid->last_name }}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900">{{ $lid->email }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900">{{ $lid->phone ?? '-' }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                                <button onclick="showUserDetails({{ $lid->id }})"
-                                                        class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors">
-                                                    Zie alle gegevens
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        @if($leden->count() === 0)
-                            <p class="text-center text-gray-500 py-8">Geen goedgekeurde leden gevonden.</p>
-                        @endif
-                    </div>
-
-                @elseif($tab === 'nieuws')
-                    <!-- Nieuws Tab (zonder toevoegen knop) -->
-                    <div>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Nieuws</h2>
-
-                        @if($nieuws->count() > 0)
-                            <div class="space-y-4">
-                                @foreach($nieuws as $item)
-                                    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-                                        <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $item->title }}</h3>
-                                        <div class="text-sm text-gray-500 mb-3">
-                                            Door {{ $item->author->first_name }} {{ $item->author->last_name }} •
-                                            {{ $item->published_at->format('d/m/Y H:i') }}
-                                        </div>
-                                        <div class="text-gray-700 prose max-w-none">
-                                            {{ Str::limit($item->content, 200) }}
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="text-center py-12">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                                </svg>
-                                <p class="mt-2 text-gray-500">Nog geen nieuwsberichten gepubliceerd.</p>
-                            </div>
-                        @endif
-                    </div>
+        @if($currentPloeg)
+            <!-- Ploeg Info -->
+            <div class="ploeg-info">
+                <h2>{{ $currentPloeg->name }}</h2>
+                @if($currentPloeg->description)
+                    <p>{{ $currentPloeg->description }}</p>
                 @endif
             </div>
-        </div>
 
-    </div>
-</div>
-
-<!-- User Details Modal -->
-<div id="userModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-2xl font-bold text-gray-900">Gebruikersgegevens</h3>
-            <button onclick="closeUserModal()" class="text-gray-400 hover:text-gray-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-            </button>
-        </div>
-        <div id="userModalContent" class="space-y-4">
-            <!-- Content will be loaded here -->
-        </div>
+                <input type="text" id="rittenZoekbalk" placeholder="Zoek ritten...">
+            </div>
+
+            @php
+                $toekomstig = $currentPloeg->ritten->filter(fn($r) => $r->date->gte($vandaag));
+                $gepasseerd = $currentPloeg->ritten->filter(fn($r) => $r->date->lt($vandaag))->sortByDesc('date');
+            @endphp
+
+            @if($currentPloeg->ritten->count() === 0)
+                <div class="empty-state">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p>Nog geen ritten gepland voor {{ $currentPloeg->name }}</p>
+                </div>
+            @else
+
+                {{-- TOEKOMSTIGE RITTEN --}}
+                @if($toekomstig->count() > 0)
+                    <div class="ritten-section-header">
+                        <span class="ritten-badge upcoming">Komende ritten</span>
+                    </div>
+                    <div id="rittenContainer" class="ritten-grid" style="margin-bottom: 40px;">
+                        @foreach($toekomstig as $rit)
+                            @include('partials.rit-card', ['rit' => $rit, 'ploeg' => $currentPloeg, 'userRitStatus' => $userRitStatuses[$rit->id] ?? null])
+                        @endforeach
+                    </div>
+                @endif
+
+                {{-- GEPASSEERDE RITTEN --}}
+                @if($gepasseerd->count() > 0)
+                    <div class="ritten-section-header">
+                        <span class="ritten-badge passed">Gepasseerde ritten</span>
+                    </div>
+                    <div class="ritten-grid ritten-passed">
+                        @foreach($gepasseerd as $rit)
+                            @include('partials.rit-card', ['rit' => $rit, 'ploeg' => $currentPloeg, 'passed' => true])
+                        @endforeach
+                    </div>
+                @endif
+
+            @endif
+        @endif
     </div>
 </div>
 
 <script>
-const ledenData = @json($leden);
+    // Zoekfunctie voor ritten
+    const rittenZoekbalk = document.getElementById('rittenZoekbalk');
+    if (rittenZoekbalk) {
+        rittenZoekbalk.addEventListener('input', function(e) {
+            const zoekterm = e.target.value.toLowerCase();
+            const rittenCards = document.querySelectorAll('#rittenContainer > div');
 
-function showUserDetails(userId) {
-    const user = ledenData.find(u => u.id === userId);
-    if (!user) return;
-
-    const content = `
-        <div class="flex items-center gap-4 mb-6 pb-6 border-b">
-            ${user.profile_picture ?
-                `<img src="/${user.profile_picture}" alt="${user.first_name}" class="w-24 h-24 rounded-full object-cover">` :
-                `<div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                    <span class="text-3xl text-gray-600 font-semibold">${user.first_name[0]}${user.last_name[0]}</span>
-                </div>`
-            }
-            <div>
-                <h4 class="text-2xl font-bold text-gray-900">${user.first_name} ${user.last_name}</h4>
-                <p class="text-gray-600">${user.email}</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <p class="text-sm font-medium text-gray-500">Email</p>
-                <p class="text-gray-900">${user.email}</p>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500">Telefoon</p>
-                <p class="text-gray-900">${user.phone || '-'}</p>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500">Geboortedatum</p>
-                <p class="text-gray-900">${user.birth_date ? new Date(user.birth_date).toLocaleDateString('nl-NL') : '-'}</p>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500">Land</p>
-                <p class="text-gray-900">${user.country || '-'}</p>
-            </div>
-            <div class="md:col-span-2">
-                <p class="text-sm font-medium text-gray-500">Adres</p>
-                <p class="text-gray-900">
-                    ${user.street && user.house_number ? `${user.street} ${user.house_number}<br>` : ''}
-                    ${user.postal_code && user.city ? `${user.postal_code} ${user.city}` : '-'}
-                </p>
-            </div>
-        </div>
-    `;
-
-    document.getElementById('userModalContent').innerHTML = content;
-    document.getElementById('userModal').classList.remove('hidden');
-}
-
-function closeUserModal() {
-    document.getElementById('userModal').classList.add('hidden');
-}
-
-// Close modal when clicking outside
-document.getElementById('userModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeUserModal();
+            rittenCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(zoekterm)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
     }
-});
-
-// Zoekfunctie voor ritten
-const rittenZoekbalk = document.getElementById('rittenZoekbalk');
-if (rittenZoekbalk) {
-    rittenZoekbalk.addEventListener('input', function(e) {
-        const zoekterm = e.target.value.toLowerCase();
-        const rittenCards = document.querySelectorAll('#rittenContainer > div');
-
-        rittenCards.forEach(card => {
-            const text = card.textContent.toLowerCase();
-            if (text.includes(zoekterm)) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    });
-}
-
-// Zoekfunctie voor leden
-const ledenZoekbalk = document.getElementById('ledenZoekbalk');
-if (ledenZoekbalk) {
-    ledenZoekbalk.addEventListener('input', function(e) {
-        const zoekterm = e.target.value.toLowerCase();
-        const ledenRows = document.querySelectorAll('tbody tr');
-
-        ledenRows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            if (text.includes(zoekterm)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    });
-}
 </script>
 @endsection

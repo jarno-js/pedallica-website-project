@@ -61,6 +61,9 @@
                                     <div class="text-sm text-gray-900">{{ $user->created_at->format('d/m/Y H:i') }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                    <button onclick="showUserDetails({{ $user->id }})" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                                        Bekijk
+                                    </button>
                                     <form action="{{ route('admin.users.approve', $user->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PUT')
@@ -134,6 +137,9 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                <button onclick="showUserDetails({{ $user->id }})" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                                    Bekijk
+                                </button>
                                 @if($user->is_admin)
                                     <form action="{{ route('admin.users.remove-admin', $user->id) }}" method="POST" class="inline">
                                         @csrf
@@ -167,7 +173,114 @@
     </div>
 </div>
 
+<!-- User Details Modal -->
+<div id="userModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-2xl font-bold text-gray-900">Gebruikersgegevens</h3>
+            <button onclick="closeUserModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div id="userModalContent" class="space-y-4">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+</div>
+
 <script>
+// Combineer pending en approved users voor modal
+const allUsersData = @json($pendingUsers->merge($approvedUsers));
+
+function showUserDetails(userId) {
+    const user = allUsersData.find(u => u.id === userId);
+    if (!user) return;
+
+    const content = `
+        <div class="flex items-center gap-4 mb-6 pb-6 border-b">
+            ${user.profile_picture ?
+                `<img src="/${user.profile_picture}" alt="${user.first_name}" class="w-24 h-24 rounded-full object-cover">` :
+                `<div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
+                    <span class="text-3xl text-gray-600 font-semibold">${user.first_name[0]}${user.last_name[0]}</span>
+                </div>`
+            }
+            <div>
+                <h4 class="text-2xl font-bold text-gray-900">${user.first_name} ${user.last_name}</h4>
+                <p class="text-gray-600">${user.email}</p>
+                ${user.is_admin ? '<span class="inline-block mt-1 px-2 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">Admin</span>' : ''}
+                ${user.approved ? '<span class="inline-block mt-1 px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Goedgekeurd</span>' : '<span class="inline-block mt-1 px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">Wachtend</span>'}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <p class="text-sm font-medium text-gray-500">Voornaam</p>
+                <p class="text-gray-900">${user.first_name}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Achternaam</p>
+                <p class="text-gray-900">${user.last_name}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Email</p>
+                <p class="text-gray-900">${user.email}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Telefoon</p>
+                <p class="text-gray-900">${user.phone || '-'}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Geboortedatum</p>
+                <p class="text-gray-900">${user.birth_date ? new Date(user.birth_date).toLocaleDateString('nl-NL') : '-'}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Land</p>
+                <p class="text-gray-900">${user.country || '-'}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Straat</p>
+                <p class="text-gray-900">${user.street || '-'}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Huisnummer</p>
+                <p class="text-gray-900">${user.house_number || '-'}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Postcode</p>
+                <p class="text-gray-900">${user.postal_code || '-'}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Stad</p>
+                <p class="text-gray-900">${user.city || '-'}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Geregistreerd op</p>
+                <p class="text-gray-900">${new Date(user.created_at).toLocaleDateString('nl-NL')} ${new Date(user.created_at).toLocaleTimeString('nl-NL', {hour: '2-digit', minute: '2-digit'})}</p>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Email geverifieerd</p>
+                <p class="text-gray-900">${user.email_verified_at ? new Date(user.email_verified_at).toLocaleDateString('nl-NL') : 'Nee'}</p>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('userModalContent').innerHTML = content;
+    document.getElementById('userModal').classList.remove('hidden');
+}
+
+function closeUserModal() {
+    document.getElementById('userModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('userModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeUserModal();
+    }
+});
+
 // Zoekfunctie voor leden in admin
 const adminLedenZoekbalk = document.getElementById('adminLedenZoekbalk');
 if (adminLedenZoekbalk) {

@@ -43,6 +43,12 @@ class PloegSeeder extends Seeder
                 'description' => 'Pedallicava evenementen en ritten',
                 'is_evening_rides' => false,
             ],
+            [
+                'name' => 'Ploegen Rit',
+                'slug' => 'ploegen-rit',
+                'description' => 'Rit waarbij alle ploegen samen rijden',
+                'is_evening_rides' => false,
+            ],
         ];
 
         foreach ($ploegen as $ploeg) {

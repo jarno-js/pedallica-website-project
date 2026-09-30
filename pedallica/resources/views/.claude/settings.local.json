@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git mv:*)",
+      "Bash(powershell -Command \"Rename-Item -Path ''C:\\\\programming-project\\\\pedallica\\\\pedallica\\\\resources\\\\views\\\\Sponsors.blade.php'' -NewName ''sponsors_temp.blade.php''; Rename-Item -Path ''C:\\\\programming-project\\\\pedallica\\\\pedallica\\\\resources\\\\views\\\\sponsors_temp.blade.php'' -NewName ''sponsors.blade.php''\")",
+      "Bash(powershell -Command:*)"
+    ]
+  }
+}

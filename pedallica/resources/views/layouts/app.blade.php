@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Pedallica')</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-
-@include('layouts.sponsor-bar')
 
 @include('layouts.navigation')
 
@@ -16,8 +15,6 @@
 <main class="min-h-screen">
     @yield('content')
 </main>
-
-@include('layouts.footer')
 
 <script>
     // Mobile menu toggle
@@ -27,9 +24,10 @@
     const closeIcon = document.getElementById('menu-close-icon');
 
     menuButton.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-        openIcon.classList.toggle('hidden');
-        closeIcon.classList.toggle('hidden');
+        const isOpen = mobileMenu.style.display === 'block';
+        mobileMenu.style.display = isOpen ? 'none' : 'block';
+        openIcon.style.display = isOpen ? 'block' : 'none';
+        closeIcon.style.display = isOpen ? 'none' : 'block';
     });
 
     // Account dropdown toggle
@@ -64,5 +62,7 @@
         });
     });
 </script>
+
+@stack('popups')
 </body>
 </html>

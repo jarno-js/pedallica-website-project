@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\\\programming-project\\\\pedallica\\\\pedallica\\\\public\\\\fotos-homepagina\\\\Banner homepage\")"
+    ]
+  }
+}
